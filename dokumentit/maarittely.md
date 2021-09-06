@@ -13,6 +13,8 @@ I can peer review projects in Python, Javascript (/ Typescript), Rust, Java, Kot
 
 The goal for the project is to first read through and mostly understand the zstandard specification, and then re-implement meaningful parts of zstandard in Python. (Re-implementing the entire project would be too large in scope, but I also can not yet say which parts are the most important ones. It will be specified when the information is found.)
 
+Other algorithms that are highly relevant in zstandard's implementation include FSE (Finite State Entropy) 
+
 
 ## The problem to solve
 
@@ -43,6 +45,7 @@ Zstandard being a compression algorithm, for the purposes of this course project
 * The official reference implementation https://github.com/facebook/zstd
 * The reference RFC https://datatracker.ietf.org/doc/html/rfc8478
   * The subsection focused on the algorithm https://datatracker.ietf.org/doc/html/rfc8478#section-3
+  * FSE - Finite State Entropy https://github.com/Cyan4973/FiniteStateEntropy/
 
 
 ## study program:
