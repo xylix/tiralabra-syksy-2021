@@ -13,16 +13,15 @@ For the Huffman coding python's hashmap implementation (dict) will be used. Heap
 
 ## The problem to solve
 
-Program and compare implementations of LZ78 and Huffman coding. They are both popular algorithms for lossless compression. If comparing is too simple, make use of the algorithms to implement a variant of Deflate.
+Program and compare implementations of LZW and Huffman coding. They are both popular algorithms for lossless compression. If comparing is too simple, make use of the algorithms to implement a variant of Deflate or such algorithm that uses both building blocks.
 
 
 ##  Program inputs
 
-* Both compression implementations will take in files and output either compressed or decompressed files based on the input type.
+* Both compression implementations will take in a file path and as output write either compressed or decompressed files based on the input type.
 
 
-
-##  Tavoitteena olevat aika- ja tilavaativuudet (m.m. O-analyysit)
+## Time- and space complexity targets (including O-analysis)
 
 The compression % targets depend on the data set. The goal is to match some comparable implementation's compression % and have compatible input and output formats.
 
