@@ -1,0 +1,7 @@
+Name              Stmts   Miss  Cover
+-------------------------------------
+src/__init__.py       0      0   100%
+src/huffmann.py       4      4     0%
+src/lzw.py            4      4     0%
+-------------------------------------
+TOTAL                 8      8     0%
