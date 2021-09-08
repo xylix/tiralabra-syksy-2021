@@ -1,2 +1,4 @@
-def test_hello():
-    print("hello")
+from src import lzw
+
+def test_main():
+    lzw.main()

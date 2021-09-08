@@ -1,2 +1,4 @@
-def test_hello():
-    print("hello")
+from src import huffmann
+
+def test_main():
+    huffmann.main()
