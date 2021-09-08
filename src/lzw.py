@@ -1,10 +1,9 @@
-from typing import Dict
 import logging
+from typing import Dict
 import typer
 
 
-TESTFILE_1 = "test_input_1.txt"
-TESTFILE_1_START_DICT = {"a": 0, "b": 1, "d": 2, "n": 3, "_": 4}
+START_DICT: Dict[str, int] = {chr(i): i for i in range(128)}
 
 
 """ Pseudocode from https://www2.cs.duke.edu/csed/curious/compression/lzw.html
@@ -19,13 +18,13 @@ while (there is still data to be read)
     ch = read a character;
     if (dictionary contains s+ch)
     {
-	s = s+ch;
+        s = s+ch;
     }
     else
     {
-	encode s to output file;
-	add s+ch to dictionary;
-	s = ch;
+        encode s to output file;
+        add s+ch to dictionary;
+        s = ch;
     }
 }
 encode s to output file;
@@ -35,22 +34,24 @@ encode s to output file;
 
 def compress(filename):
     """
-    Creates a file and a dict, named {filename}.lzw and {filename}.lzwdict
+    Creates a compressed file named {filename}.lzw
     """
     output = ""
     # dictionary: Dict[str, str] = {}
-    dictionary = TESTFILE_1_START_DICT
+    # TODO: build the beginning dictionary here from all the single characters in the file
+    dictionary = START_DICT.copy()
     with open(filename, "r") as f:
-        bytes = f.read()
+        chars = f.read()
         s = ""
-        for i, ch in enumerate(bytes):
+        for i, ch in enumerate(chars):
             logging.debug(f"character at index {i}: {ch}")
             logging.debug(f"s+ch ({s+ch}) in dict: {dictionary.get(s+ch)}")
 
             if dictionary.get(s + ch):
                 s = s + ch
             else:
-                output += str(dictionary[s])
+                # FIXME: This generates an extra comma at the end of the out file
+                output += str(dictionary[s]) + ","
                 # TODO: this might be incorrect
                 dictionary[s + ch] = len(dictionary.items())
                 s = ch
@@ -87,7 +88,27 @@ while (there is still data to read)
 
 
 def decompress(filename: str):
-    pass
+    """
+    extracts and .lzw file into {filename}.out
+    """
+    output = ""
+    dictionary = START_DICT.copy()
+    with open(filename, "r") as f:
+        chars = f.read()
+        splat = chars.split(",")
+        prevcode = splat[0]
+        for i, currcode in enumerate(splat):
+            logging.debug(f"currcode at index {i}: {currcode}")
+            entry = list(dictionary.keys())[int(currcode)]
+            output += entry
+            ch = entry[0]
+            dictionary[prevcode + ch] = len(dictionary.items())
+            prevcode = currcode
+
+            pass
+
+    with open(f"{filename}.out", "w") as outf:
+        outf.write(output)
 
 
 def main(
