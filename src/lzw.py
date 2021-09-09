@@ -138,6 +138,8 @@ def main(
         print("No operation specified")
         return
     if write_to_file:
+        # TODO: figure out a more efficient storage format for the compressed output
+        # maybe check https://docs.python.org/3/library/codecs.html
         with open(outf_name, "w") as outf:
             outf.write(output)
     logging.debug(f"Created output: `{output}`")
