@@ -37,8 +37,6 @@ def compress(input_data) -> str:
     Creates a compressed file named {filename}.lzw
     """
     output = ""
-    # dictionary: Dict[str, str] = {}
-    # TODO: build the beginning dictionary here from all the single characters in the file
     dictionary = START_DICT.copy()
     s = ""
     for i, ch in enumerate(input_data):
@@ -53,14 +51,8 @@ def compress(input_data) -> str:
             # TODO: this might be incorrect
             dictionary[s + ch] = len(dictionary.items())
             s = ch
-    logging.debug(f"output: {output}")
     logging.debug(f"dict: {dictionary}")
     return output
-
-    # this is not necessary; dict can be built during decoding https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Welch#Decoding
-    # with open(f"{filename}.lzwdict") as outdict:
-    # outdict.write(dictionary)
-    pass
 
 
 """ Pseudocode from https://www2.cs.duke.edu/csed/curious/compression/lzw.html
