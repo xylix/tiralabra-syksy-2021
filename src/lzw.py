@@ -40,17 +40,17 @@ def compress(input_data) -> str:
     dictionary = START_DICT.copy()
     s = ""
     for i, ch in enumerate(input_data):
-        logging.debug(f"character at index {i}: {ch}")
-        logging.debug(f"s+ch ({s+ch}) in dict: {dictionary.get(s+ch)}")
+        logging.debug(f"character at index {i}: {repr(ch)}")
+        logging.debug(f"s+ch ({repr(s+ch)}) in dict: {dictionary.get(s+ch)}")
 
         if dictionary.get(s + ch):
             s = s + ch
         else:
-            # FIXME: This generates an extra comma at the end of the out file
             output.append(str(dictionary[s]))
             # TODO: this might be incorrect
             dictionary[s + ch] = len(dictionary.items())
             s = ch
+    output.append(str(dictionary[s]))
     logging.debug(f"dict: {dictionary}")
     return ",".join(output)
 
@@ -80,24 +80,34 @@ def decompress(input_data: str) -> str:
     """
     extracts and .lzw file into {filename}.out
     """
+
+    def translate(code: int) -> str:
+        return list(dictionary.keys())[int(code)]
+
     output = ""
     dictionary = START_DICT.copy()
     splat = input_data.split(",")
-    prevcode = splat[0]
-    for i, currcode in enumerate(splat):
+    # Handle the first entry separately
+    prevcode = int(splat[0])
+    output += translate(prevcode)
+    for i, currcode in enumerate(splat[1:]):
         logging.debug(f"currcode at index {i}: {currcode}")
-        entry = list(dictionary.keys())[int(currcode)]
+        entry = translate(int(currcode))
+        logging.debug(f"currcode's decoded value: {repr(entry)}")
         output += entry
         ch = entry[0]
-        dictionary[prevcode + ch] = len(dictionary.items())
-        prevcode = currcode
+        dictionary[translate(prevcode) + ch] = len(dictionary.items())
+        logging.debug(
+            f"added translation {translate(prevcode) + ch}: {len(dictionary.items())}"
+        )
+        prevcode = int(currcode)
 
     return output
 
 
 def main(
     filename: str,
-    archive: bool = True,
+    archive: bool = False,
     extract: bool = False,
     debug: bool = True,
     write_to_file: bool = False,
@@ -108,17 +118,17 @@ def main(
         logging.basicConfig(level=logging.DEBUG)
     else:
         logging.basicConfig(level=logging.WARNING)
-        # logging.debug(f"Argument List: {sys.argv}")
-        if archive or extract:
-            with open(filename, "r") as f:
-                if archive:
-                    output = compress(f.read())
-                    outf_name = f"{filename}.lzw"
-                else:
-                    output = decompress(f.read())
-                    outf_name = f"{filename}.out"
-        else:
-            raise ValueError("No operation specified")
+    # logging.debug(f"Argument List: {sys.argv}")
+    if archive or extract:
+        with open(filename, "r") as f:
+            if archive:
+                output = compress(f.read())
+                outf_name = f"{filename}.lzw"
+            else:
+                output = decompress(f.read())
+                outf_name = f"{filename}.out"
+    else:
+        raise ValueError("No operation specified")
     if write_to_file:
         with open(outf_name, "w") as outf:
             outf.write(output)
