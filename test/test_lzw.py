@@ -44,6 +44,7 @@ def test_compress_decompress_should_negate():
 
 def test_main_invalid_input():
     lzw.main("nonexistent.txt", True, True, True, False)
+    lzw.main("nonexistent.txt.lzw", True, False, True, False)
 
 
 def test_permutations_of_main_args(temp_file):

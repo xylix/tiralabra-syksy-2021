@@ -121,7 +121,6 @@ def main(
         logging.basicConfig(level=logging.WARNING)
     # logging.debug(f"Argument List: {sys.argv}")
     if archive or extract:
-
         if archive and ".lzw" in filename:
             print("Do not archive already archived files")
             return
