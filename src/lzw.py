@@ -113,13 +113,21 @@ def main(
     write_to_file: bool = False,
 ):
     if archive and extract:
-        raise ValueError("Either archive or extract, not both")
+        print("Either archive or extract, not both")
+        return
     if debug:
         logging.basicConfig(level=logging.DEBUG)
     else:
         logging.basicConfig(level=logging.WARNING)
     # logging.debug(f"Argument List: {sys.argv}")
     if archive or extract:
+
+        if archive and ".lzw" in filename:
+            print("Do not archive already archived files")
+            return
+
+        if extract and ".lzw" not in filename:
+            filename = filename + ".lzw"
         with open(filename, "r") as f:
             if archive:
                 output = compress(f.read())
@@ -128,7 +136,8 @@ def main(
                 output = decompress(f.read())
                 outf_name = f"{filename}.out"
     else:
-        raise ValueError("No operation specified")
+        print("No operation specified")
+        return
     if write_to_file:
         with open(outf_name, "w") as outf:
             outf.write(output)
