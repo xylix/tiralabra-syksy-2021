@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Optional
 from heapq import heappush
 from dataclasses import dataclass
 
@@ -19,8 +19,8 @@ def preprocess(data: str) -> Dict[str, int]:
 class Node:
     freq: float
     symbol: str
-    left = "Node"
-    right = "Node"
+    left: Optional["Node"] = None
+    right: Optional["Node"] = None
 
     def __lt__(self, other):
         self.freq < other.freq
@@ -46,10 +46,10 @@ def compress(data: str) -> str:
     """
     c = preprocess(data)
     q = []
-    for char, freq in c.items():
-        node = Node(freq, char)
+    for symbol, freq in c.items():
+        node = Node(freq, symbol)
         heappush(q, node)
-    while len(q) >= 2:
+    while len(q) > 1:
         left = q.pop()
         right = q.pop()
         freq = left.freq + right.freq
