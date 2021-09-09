@@ -32,7 +32,7 @@ encode s to output file;
 """
 
 
-def compress(filename):
+def compress(input_data) -> str:
     """
     Creates a compressed file named {filename}.lzw
     """
@@ -40,25 +40,22 @@ def compress(filename):
     # dictionary: Dict[str, str] = {}
     # TODO: build the beginning dictionary here from all the single characters in the file
     dictionary = START_DICT.copy()
-    with open(filename, "r") as f:
-        chars = f.read()
-        s = ""
-        for i, ch in enumerate(chars):
-            logging.debug(f"character at index {i}: {ch}")
-            logging.debug(f"s+ch ({s+ch}) in dict: {dictionary.get(s+ch)}")
+    s = ""
+    for i, ch in enumerate(input_data):
+        logging.debug(f"character at index {i}: {ch}")
+        logging.debug(f"s+ch ({s+ch}) in dict: {dictionary.get(s+ch)}")
 
-            if dictionary.get(s + ch):
-                s = s + ch
-            else:
-                # FIXME: This generates an extra comma at the end of the out file
-                output += str(dictionary[s]) + ","
-                # TODO: this might be incorrect
-                dictionary[s + ch] = len(dictionary.items())
-                s = ch
+        if dictionary.get(s + ch):
+            s = s + ch
+        else:
+            # FIXME: This generates an extra comma at the end of the out file
+            output += str(dictionary[s]) + ","
+            # TODO: this might be incorrect
+            dictionary[s + ch] = len(dictionary.items())
+            s = ch
     logging.debug(f"output: {output}")
     logging.debug(f"dict: {dictionary}")
-    with open(f"{filename}.lzw", "w") as outf:
-        outf.write(output)
+    return output
 
     # this is not necessary; dict can be built during decoding https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Welch#Decoding
     # with open(f"{filename}.lzwdict") as outdict:
@@ -87,28 +84,23 @@ while (there is still data to read)
 """
 
 
-def decompress(filename: str):
+def decompress(input_data: str) -> str:
     """
     extracts and .lzw file into {filename}.out
     """
     output = ""
     dictionary = START_DICT.copy()
-    with open(filename, "r") as f:
-        chars = f.read()
-        splat = chars.split(",")
-        prevcode = splat[0]
-        for i, currcode in enumerate(splat):
-            logging.debug(f"currcode at index {i}: {currcode}")
-            entry = list(dictionary.keys())[int(currcode)]
-            output += entry
-            ch = entry[0]
-            dictionary[prevcode + ch] = len(dictionary.items())
-            prevcode = currcode
+    splat = input_data.split(",")
+    prevcode = splat[0]
+    for i, currcode in enumerate(splat):
+        logging.debug(f"currcode at index {i}: {currcode}")
+        entry = list(dictionary.keys())[int(currcode)]
+        output += entry
+        ch = entry[0]
+        dictionary[prevcode + ch] = len(dictionary.items())
+        prevcode = currcode
 
-            pass
-
-    with open(f"{filename}.out", "w") as outf:
-        outf.write(output)
+    return output
 
 
 def main(
@@ -116,6 +108,7 @@ def main(
     archive: bool = True,
     extract: bool = False,
     debug: bool = True,
+    write_to_file: bool = False,
 ):
     if archive and extract:
         raise Exception("Either archive or extract, not both")
@@ -124,10 +117,19 @@ def main(
     else:
         logging.basicConfig(level=logging.WARNING)
     # logging.debug(f"Argument List: {sys.argv}")
-    if archive:
-        compress(filename)
-    elif extract:
-        decompress(filename)
+    with open(filename, "r") as f:
+        if archive:
+            output = compress(f.read())
+            outf_name = f"{filename}.lzw"
+        elif extract:
+            output = decompress(f.read())
+            outf_name = f"{filename}.out"
+        else:
+            raise Exception("No operation specified")
+    if write_to_file:
+        with open(outf_name, "w") as outf:
+            outf.write(output)
+    logging.debug(f"Created output: `{output}`")
 
 
 if __name__ == "__main__":
