@@ -1,9 +1,10 @@
 from src import lzw
+import pytest
 
 
 # Once the algorithm works we will be able to use same test data, just in reverse
 
-TEST_COMPRESS_DATA = {"banana_bandana": "98,97,110,129,97,95,128,110,100,131,"}
+TEST_COMPRESS_DATA = {"banana_bandana\n": "98,97,110,129,97,95,128,110,100,131"}
 
 
 def test_compress():
@@ -21,5 +22,13 @@ def test_decompress():
         assert out == outp
 
 
-# def test_main():
-#    lzw.main()
+def test_compress_decompress_should_negate():
+    test_str = "asdasdasdasdabcabc"
+    compressed = lzw.compress(test_str)
+    decompressed = lzw.decompress(compressed)
+    assert decompressed == test_str
+
+
+def test_main_invalid_input():
+    with pytest.raises(Exception) as excinfo:
+        lzw.main("nonexistent.txt", True, True, True, False)

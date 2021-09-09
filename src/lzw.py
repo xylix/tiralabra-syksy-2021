@@ -36,7 +36,7 @@ def compress(input_data) -> str:
     """
     Creates a compressed file named {filename}.lzw
     """
-    output = ""
+    output = []
     dictionary = START_DICT.copy()
     s = ""
     for i, ch in enumerate(input_data):
@@ -47,12 +47,12 @@ def compress(input_data) -> str:
             s = s + ch
         else:
             # FIXME: This generates an extra comma at the end of the out file
-            output += str(dictionary[s]) + ","
+            output.append(str(dictionary[s]))
             # TODO: this might be incorrect
             dictionary[s + ch] = len(dictionary.items())
             s = ch
     logging.debug(f"dict: {dictionary}")
-    return output
+    return ",".join(output)
 
 
 """ Pseudocode from https://www2.cs.duke.edu/csed/curious/compression/lzw.html
