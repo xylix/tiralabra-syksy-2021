@@ -10,17 +10,21 @@ from pathlib import Path
 # Once the algorithm works we will be able to use same test data, just in reverse
 
 TEST_DATA = {"banana_bandana\n": "98,97,110,129,97,95,128,110,100,131,10"}
-TEST_INFILE = Path(__file__).parent / "test_file.txt"
-TEST_OUTFILE = Path(__file__).parent / "test_file.txt.lzw"
+TEST_INFILE = "test_file.txt"
+TEST_OUTFILE = "test_file.txt.lzw"
+TEST_LIPSUMFILE = "test_lipsum_10_paragraphs.txt"
 
 
 @pytest.fixture
-def temp_file() -> Iterator[Path]:
+def temp_dir() -> Iterator[Path]:
     with tempfile.TemporaryDirectory() as dirname:
-        copyfile(TEST_INFILE, Path(dirname) / "test_file.txt")
-        copyfile(TEST_OUTFILE, Path(dirname) / "test_file.txt.lzw")
-        tmp_file_path = Path(dirname) / "test_file.txt"
-        yield tmp_file_path
+        copyfile(Path(__file__).parent / TEST_INFILE, Path(dirname) / TEST_INFILE)
+        copyfile(Path(__file__).parent / TEST_OUTFILE, Path(dirname) / TEST_OUTFILE)
+        copyfile(
+            Path(__file__).parent / TEST_LIPSUMFILE,
+            Path(dirname) / "test_lipsum_10_paragraphs.txt",
+        )
+        yield Path(dirname)
 
 
 def test_compress():
@@ -35,11 +39,12 @@ def test_decompress():
         assert out == cleartext
 
 
-def test_compress_decompress_should_negate():
-    test_str = "a_normal_word"
-    compressed = lzw.compress(test_str)
+def test_compress_decompress_should_negate(temp_dir):
+    with open(temp_dir / TEST_LIPSUMFILE) as f:
+        data = f.read()
+    compressed = lzw.compress(data)
     decompressed = lzw.decompress(compressed)
-    assert decompressed == test_str
+    assert data == decompressed
 
 
 def test_main_invalid_input():
@@ -47,10 +52,8 @@ def test_main_invalid_input():
     lzw.main("nonexistent.txt.lzw", True, False, True, False)
 
 
-def test_permutations_of_main_args(temp_file):
+def test_permutations_of_main_args(temp_dir):
     l = [False, True]
     bools = [list(i) for i in itertools.product(l, repeat=4)]
     for permutation in bools:
-        if permutation[1]:
-            f"{temp_file}.lzw"
-        lzw.main(str(temp_file), *permutation)
+        lzw.main(str(temp_dir / TEST_INFILE), *permutation)
