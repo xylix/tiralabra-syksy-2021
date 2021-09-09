@@ -1,7 +1,32 @@
+from typing import Dict
+from heapq import heappush
+from dataclasses import dataclass
+
 # Pseudocode examples from https://riptutorial.com/algorithm/example/23995/huffman-coding
 
 
-def compress():
+def preprocess(data: str) -> Dict[str, int]:
+    chardict = {}
+    for c in data:
+        if c in chardict:
+            chardict[c] += 1
+        else:
+            chardict[c] = 1
+    return chardict
+
+
+@dataclass
+class Node:
+    freq: float
+    symbol: str
+    left = "Node"
+    right = "Node"
+
+    def __lt__(self, other):
+        self.freq < other.freq
+
+
+def compress(data: str) -> str:
     """
     Procedure Huffman(C):     // C is the set of n characters and related information
     n = C.size
@@ -19,10 +44,22 @@ def compress():
     end while
     Return Q
     """
-    pass
+    c = preprocess(data)
+    q = []
+    for char, freq in c.items():
+        node = Node(freq, char)
+        heappush(q, node)
+    while len(q) >= 2:
+        left = q.pop()
+        right = q.pop()
+        freq = left.freq + right.freq
+        z = Node(freq, left.symbol + right.symbol, left, right)
+        heappush(q, z)
+
+    return str(q)
 
 
-def decompress():
+def decompress(data: str):
     """
     Procedure HuffmanDecompression(root, S):   // root represents the root of Huffman Tree
     n := S.length                              // S refers to bit-stream to be decompressed
@@ -43,7 +80,7 @@ def decompress():
 
 
 def main():
-    print("hello world")
+    print(repr(compress("FIRST_SIMPLE_TEST_STRING")))
 
 
 if __name__ == "__main__":
