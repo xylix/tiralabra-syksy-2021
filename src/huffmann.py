@@ -1,4 +1,5 @@
-from typing import Dict, Optional
+import logging
+from typing import Dict, Optional, List, Iterable, Tuple
 from heapq import heappush
 from dataclasses import dataclass
 
@@ -16,9 +17,15 @@ def preprocess(data: str) -> Dict[str, int]:
 
 
 @dataclass
+class HuffmannResult:
+    encoded: str
+    dictionary: Dict[str, str]
+
+
+@dataclass
 class Node:
     freq: float
-    symbol: str
+    symbol: Optional[str]
     left: Optional["Node"] = None
     right: Optional["Node"] = None
 
@@ -26,7 +33,26 @@ class Node:
         self.freq < other.freq
 
 
-def compress(data: str) -> str:
+def transform_bintree(root) -> Dict[str, str]:
+    initial_binary = ""
+    output = {}
+
+    def helper(curr_binary, currnode) -> Iterable[Tuple[str, str]]:
+        yield currnode.symbol, curr_binary
+        if currnode.left:
+            yield from helper(curr_binary + "0", currnode.left)
+
+        if currnode.right:
+            yield from helper(curr_binary + "1", currnode.right)
+
+    for outval in helper(initial_binary, root):
+        output[outval[0]] = outval[1]
+    del output[None]
+
+    return output
+
+
+def compress(data: str) -> HuffmannResult:
     """
     Procedure Huffman(C):     // C is the set of n characters and related information
     n = C.size
@@ -45,7 +71,7 @@ def compress(data: str) -> str:
     Return Q
     """
     c = preprocess(data)
-    q = []
+    q: List[Node] = []
     for symbol, freq in c.items():
         node = Node(freq, symbol)
         heappush(q, node)
@@ -53,12 +79,20 @@ def compress(data: str) -> str:
         left = q.pop()
         right = q.pop()
         freq = left.freq + right.freq
-        z = Node(freq, left.symbol + right.symbol, left, right)
+        z = Node(freq, None, left, right)
         heappush(q, z)
 
-    # TODO: use the created tree to encode the data here
+    # Transform the binary tree to a dictionary
+    encoding_dict = transform_bintree(q[0])
+    print(encoding_dict)
 
-    return str(q)
+    # Use the created binary tree to encode the data. Could not find a pseudo code for this, might need to create one.
+    output = ""
+    for char in data:
+        encoded_char: str = encoding_dict[char]
+        output += encoded_char
+
+    return HuffmannResult(str(output), encoding_dict)
 
 
 def decompress(tree_root: Node, data: str):

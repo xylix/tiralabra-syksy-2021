@@ -4,7 +4,7 @@ from src.huffmann import Node
 
 TEST_DATA = {
     "banana_bandana\n": (
-        "binary encoding",
+        "1010010100101000110100100001010010100000",
         Node(
             freq=15,
             symbol="\nd_nab",
