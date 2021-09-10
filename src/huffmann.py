@@ -86,7 +86,7 @@ def compress(data: str) -> HuffmannResult:
         z = Node(freq, None, left, right)
         heappush(q, z)
 
-    logging.debug(q[0])
+    # logging.debug(q[0])
     # Transform the binary tree to a dictionary
     encoding_dict = transform_bintree(q[0])
     logging.debug(encoding_dict)
@@ -139,8 +139,8 @@ def main():
     else:
         logging.basicConfig(level=logging.WARNING)
     compress_output = compress("FIRST_SIMPLE_TEST_STRING")
-    print_tree(compress_output.bintree)
-    print(repr(compress_output))
+    logging.debug("\n" + "\n".join(print_tree(compress_output.bintree)))
+    # logging.debug(repr(compress_output))
 
 
 if __name__ == "__main__":
