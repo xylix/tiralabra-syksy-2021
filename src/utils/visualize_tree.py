@@ -2,11 +2,18 @@
 
 
 def print_tree(root, val="symbol", left="left", right="right"):
+    def valasstring(node):
+        value = getattr(node, val)
+        if value:
+            return "%s" % value
+        else:
+            return "_"
+
     def display(root, val=val, left=left, right=right):
         """Returns list of strings, width, height, and horizontal coordinate of the root."""
         # No child.
         if getattr(root, right) is None and getattr(root, left) is None:
-            line = "%s" % getattr(root, val)
+            line = valasstring(root)
             width = len(line)
             height = 1
             middle = width // 2
@@ -15,7 +22,7 @@ def print_tree(root, val="symbol", left="left", right="right"):
         # Only left child.
         if getattr(root, right) is None:
             lines, n, p, x = display(getattr(root, left))
-            s = "%s" % getattr(root, val)
+            s = valasstring(root)
             u = len(s)
             first_line = (x + 1) * " " + (n - x - 1) * "_" + s
             second_line = x * " " + "/" + (n - x - 1 + u) * " "
@@ -25,7 +32,7 @@ def print_tree(root, val="symbol", left="left", right="right"):
         # Only right child.
         if getattr(root, left) is None:
             lines, n, p, x = display(getattr(root, right))
-            s = "%s" % getattr(root, val)
+            s = valasstring(root)
             u = len(s)
             first_line = s + x * "_" + (n - x) * " "
             second_line = (u + x) * " " + "\\" + (n - x - 1) * " "
@@ -35,7 +42,7 @@ def print_tree(root, val="symbol", left="left", right="right"):
         # Two children.
         left, n, p, x = display(getattr(root, left))
         right, m, q, y = display(getattr(root, right))
-        s = "%s" % getattr(root, val)
+        s = valasstring(root)
         u = len(s)
         first_line = (x + 1) * " " + (n - x - 1) * "_" + s + y * "_" + (m - y) * " "
         second_line = (
