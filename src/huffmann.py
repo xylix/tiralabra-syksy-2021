@@ -116,6 +116,7 @@ def decompress(input: HuffmannResult):
         print current.symbol
     endfor
     """
+    # Can't use handy dict for decompression because the tree also encodes the information of at what point which symbol terminates
     data = input.encoded
     output = ""
     n = len(data)
