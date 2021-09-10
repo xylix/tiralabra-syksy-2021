@@ -1,4 +1,5 @@
 import logging
+from utils.visualize_tree import print_tree
 from typing import Dict, Optional, List, Iterable, Tuple
 from heapq import heappush
 from dataclasses import dataclass
@@ -17,12 +18,6 @@ def preprocess(data: str) -> Dict[str, int]:
 
 
 @dataclass
-class HuffmannResult:
-    encoded: str
-    dictionary: Dict[str, str]
-
-
-@dataclass
 class Node:
     freq: float
     symbol: Optional[str]
@@ -31,6 +26,13 @@ class Node:
 
     def __lt__(self, other):
         self.freq < other.freq
+
+
+@dataclass
+class HuffmannResult:
+    encoded: str
+    dictionary: Dict[str, str]
+    bintree: Node
 
 
 def transform_bintree(root) -> Dict[str, str]:
@@ -75,6 +77,7 @@ def compress(data: str) -> HuffmannResult:
     for symbol, freq in c.items():
         node = Node(freq, symbol)
         heappush(q, node)
+    # FIXME: it seems there is some problem with the tree's weighting. It leans
     while len(q) > 1:
         left = q.pop()
         right = q.pop()
@@ -82,17 +85,17 @@ def compress(data: str) -> HuffmannResult:
         z = Node(freq, None, left, right)
         heappush(q, z)
 
+    logging.debug(q[0])
     # Transform the binary tree to a dictionary
     encoding_dict = transform_bintree(q[0])
-    print(encoding_dict)
+    logging.debug(encoding_dict)
 
     # Use the created binary tree to encode the data. Could not find a pseudo code for this, might need to create one.
     output = ""
     for char in data:
         encoded_char: str = encoding_dict[char]
         output += encoded_char
-
-    return HuffmannResult(str(output), encoding_dict)
+    return HuffmannResult(str(output), encoding_dict, q[0])
 
 
 def decompress(tree_root: Node, data: str):
@@ -122,12 +125,19 @@ def decompress(tree_root: Node, data: str):
             else:
                 current = current.right
             i += 1
-        output += current.symbol
+        output += current.symbol or ""
     return output
 
 
 def main():
-    print(repr(compress("FIRST_SIMPLE_TEST_STRING")))
+    debug = True
+    if debug:
+        logging.basicConfig(level=logging.DEBUG)
+    else:
+        logging.basicConfig(level=logging.WARNING)
+    compress_output = compress("FIRST_SIMPLE_TEST_STRING")
+    print_tree(compress_output.bintree)
+    print(repr(compress_output))
 
 
 if __name__ == "__main__":
