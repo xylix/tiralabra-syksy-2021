@@ -1,8 +1,9 @@
 import logging
-from utils.visualize_tree import print_tree
 from typing import Dict, Optional, List, Iterable, Tuple
-from heapq import heappush
+from heapq import heappush, heappop
 from dataclasses import dataclass
+
+from .utils.visualize_tree import print_tree
 
 # Pseudocode examples from https://riptutorial.com/algorithm/example/23995/huffman-coding
 
@@ -77,10 +78,10 @@ def compress(data: str) -> HuffmannResult:
     for symbol, freq in c.items():
         node = Node(freq, symbol)
         heappush(q, node)
-    # FIXME: it seems there is some problem with the tree's weighting. It leans
+    # FIXME: it seems there is some problem with the tree's weighting. It leans heavily to the left
     while len(q) > 1:
-        left = q.pop()
-        right = q.pop()
+        left = heappop(q)
+        right = heappop(q)
         freq = left.freq + right.freq
         z = Node(freq, None, left, right)
         heappush(q, z)
@@ -98,7 +99,7 @@ def compress(data: str) -> HuffmannResult:
     return HuffmannResult(str(output), encoding_dict, q[0])
 
 
-def decompress(tree_root: Node, data: str):
+def decompress(input: HuffmannResult):
     """
     Procedure HuffmanDecompression(root, S):   // root represents the root of Huffman Tree
     n := S.length                              // S refers to bit-stream to be decompressed
@@ -115,10 +116,11 @@ def decompress(tree_root: Node, data: str):
         print current.symbol
     endfor
     """
+    data = input.encoded
     output = ""
     n = len(data)
     for i in range(n):
-        current = tree_root
+        current = input.bintree
         while current.left and current.right:
             if data[i] == 0:
                 current = current.left
