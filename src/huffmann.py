@@ -56,10 +56,12 @@ def compress(data: str) -> str:
         z = Node(freq, left.symbol + right.symbol, left, right)
         heappush(q, z)
 
+    # TODO: use the created tree to encode the data here
+
     return str(q)
 
 
-def decompress(data: str):
+def decompress(tree_root: Node, data: str):
     """
     Procedure HuffmanDecompression(root, S):   // root represents the root of Huffman Tree
     n := S.length                              // S refers to bit-stream to be decompressed
@@ -76,7 +78,18 @@ def decompress(data: str):
         print current.symbol
     endfor
     """
-    pass
+    output = ""
+    n = len(data)
+    for i in range(n):
+        current = tree_root
+        while current.left and current.right:
+            if data[i] == 0:
+                current = current.left
+            else:
+                current = current.right
+            i += 1
+        output += current.symbol
+    return output
 
 
 def main():
