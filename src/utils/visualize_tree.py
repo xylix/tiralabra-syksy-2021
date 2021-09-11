@@ -1,3 +1,4 @@
+# pylint: disable-all
 # Original version from https://stackoverflow.com/a/65865825
 # Modified
 
