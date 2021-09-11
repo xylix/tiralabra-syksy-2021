@@ -1,3 +1,4 @@
+from pathlib import Path
 from src import huffmann
 from src.huffmann import Node, HuffmannResult
 
@@ -96,6 +97,14 @@ def test_decompress():
     for cleartext, expected_output in TEST_DATA.items():
         out = huffmann.decompress(expected_output)
         assert out == cleartext
+
+
+def test_longer_input_file():
+    with open(Path(__file__).parent / TEST_LIPSUMFILE) as f:
+        data = f.read()
+    compressed = huffmann.compress(data)
+    decompressed = huffmann.decompress(compressed)
+    assert data == decompressed
 
 
 def test_main():

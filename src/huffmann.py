@@ -136,11 +136,12 @@ def decompress(input: HuffmannResult):
         current = root
         # We can use and here since the tree is balanced
         while current.left and current.right:
-            if S[i] == 0:
+            if S[i] == "0":
                 current = current.left
             else:
                 current = current.right
             i = i + 1
+        # The terminal nodes should always have a symbol
         assert current.symbol
         output += current.symbol
     return output
