@@ -6,6 +6,14 @@ Kerkko Pelttari's algorithm project course work in fall 2021.
 
 Setup: create virtualenv (or don't) and run `pip install -r dev-requirements.txt`
 
+Command line help: `python -m src.main --help`
+
+Compress `filename` with LZW : `python -m src.main filename --operation archive --algorithm lzw`
+Compress `filename` with Huffmann coding: `python -m src.main filename --operation archive --algorithm huffmann`
+
+Extract `filename` (that has either .lzw or .huffmann extension) : `python -m src.main filename --operation extract `
+
+
 Run tests: `make test` 
 Run performance tests: `make test-with-benchmarks`
 
