@@ -3,12 +3,16 @@ from io import UnsupportedOperation
 import logging
 from pathlib import Path
 import pickle
-from typing import Optional
+import sys
 
 import typer
 
 from . import lzw
 from . import huffman
+
+
+SUPPORTED_ARCHIVES = [".lzw", ".huffman"]
+FILETYPES_TO_ARCHIVE = [".txt"]
 
 
 class Algorithm(Enum):
@@ -22,20 +26,28 @@ class Operation(Enum):
     auto = "auto"
 
 
+# The type ignores for enum params are necessary because typer has problems with enum default values
 def main(
     filename: str,
-    operation: Operation = Operation.auto,
+    operation: Operation = "auto",  # type: ignore
     debug: bool = True,
     write_to_file: bool = False,
-    compression_algorithm: Algorithm = Algorithm.huffman,
+    algo: Algorithm = "huffman",  # type: ignore
 ):
     """
     LZW modules entry point
     """
+    if debug:
+        logging.basicConfig(level=logging.DEBUG)
+    else:
+        logging.basicConfig(level=logging.WARNING)
 
-    if compression_algorithm == Algorithm.lzw:
+    logging.debug(f"Argument List: {sys.argv}")
+    logging.debug(f"locals: {locals()}")
+
+    if algo == Algorithm.lzw:
         module = lzw
-    elif compression_algorithm == Algorithm.huffman:
+    elif algo == Algorithm.huffman:
         module = huffman
     else:
         raise TypeError("Invalid algorithm specified")
@@ -43,19 +55,15 @@ def main(
     if operation not in Operation:
         raise TypeError("Invalid operation")
 
-    if debug:
-        logging.basicConfig(level=logging.DEBUG)
-    else:
-        logging.basicConfig(level=logging.WARNING)
-    # logging.debug(f"Argument List: {sys.argv}")
-
-    if operation == operation.archive and (".lzw" in filename or ".huff" in filename):
+    if operation == operation.archive and (
+        ".lzw" in filename or ".huffman" in filename
+    ):
         raise UnsupportedOperation("Do not archive already archived files")
 
     def compress():
         with open(filename, "r", encoding="UTF-8") as file:
             output = module.compress(file.read())
-            outf_name = f"{filename}.{compression_algorithm.value}"
+            outf_name = f"{filename}.{algo.value}"
         return output, outf_name
 
     def decompress():
@@ -64,14 +72,24 @@ def main(
             outf_name = f"{filename}.out"
         return output, outf_name
 
-    if operation.archive:
+    infile = Path(filename)
+    if operation == operation.archive:
+        assert infile.suffix in FILETYPES_TO_ARCHIVE
         output, outf_name = compress()
-    elif operation.extract:
+    elif operation == operation.extract:
+        assert infile.suffix in SUPPORTED_ARCHIVES
         output, outf_name = decompress()
-    elif operation.auto:
-        infile = Path(filename)
-        if infile.suffix in [".lzw", ".huffman"]:
-            pass
+    elif operation == operation.auto:
+        logging.debug(f"Suffix: `{infile.suffix}`")
+        if infile.suffix in SUPPORTED_ARCHIVES:
+            output, outf_name = decompress()
+        # TODO: add more supported input types
+        elif infile.suffix in FILETYPES_TO_ARCHIVE:
+            output, outf_name = compress()
+        else:
+            raise ValueError(
+                f"Cannot figure out automatic operation type from {filename}"
+            )
 
         # TODO: figure out the operation from filename
     else:
