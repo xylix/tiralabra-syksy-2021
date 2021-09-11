@@ -6,35 +6,32 @@ import typer
 START_DICT: Dict[str, int] = {chr(i): i for i in range(128)}
 
 
-""" Pseudocode from https://www2.cs.duke.edu/csed/curious/compression/lzw.html
-
-string s;
-char ch;
-...
-
-s = empty string;
-while (there is still data to be read)
-{
-    ch = read a character;
-    if (dictionary contains s+ch)
-    {
-        s = s+ch;
-    }
-    else
-    {
-        encode s to output file;
-        add s+ch to dictionary;
-        s = ch;
-    }
-}
-encode s to output file;
-
-"""
-
-
-def compress(input_data) -> str:
+def compress(input_data: str) -> str:
     """
-    Creates a compressed file named {filename}.lzw
+    Takes in an input string and returns a compressed version of it.
+
+    Roughly implements the following pseudocode from https://www2.cs.duke.edu/csed/curious/compression/lzw.html
+
+    string s;
+    char ch;
+    ...
+
+    s = empty string;
+    while (there is still data to be read)
+    {
+        ch = read a character;
+        if (dictionary contains s+ch)
+        {
+            s = s+ch;
+        }
+        else
+        {
+            encode s to output file;
+            add s+ch to dictionary;
+            s = ch;
+        }
+    }
+    encode s to output file;
     """
     output = []
     dictionary = START_DICT.copy()
@@ -55,30 +52,29 @@ def compress(input_data) -> str:
     return ",".join(output)
 
 
-""" Pseudocode from https://www2.cs.duke.edu/csed/curious/compression/lzw.html
-
-string entry;
-char ch;
-int prevcode, currcode;
-...
-
-prevcode = read in a code;
-decode/output prevcode;
-while (there is still data to read)
-{
-    currcode = read in a code;
-    entry = translation of currcode from dictionary;
-    output entry;
-    ch = first char of entry;
-    add ((translation of prevcode)+ch) to dictionary;
-    prevcode = currcode;
-}
-"""
-
-
 def decompress(input_data: str) -> str:
     """
     extracts and .lzw file into {filename}.out
+
+    Roughly implements the following pseudocode from https://www2.cs.duke.edu/csed/curious/compression/lzw.html
+
+    string entry;
+    char ch;
+    int prevcode, currcode;
+    ...
+
+    prevcode = read in a code;
+    decode/output prevcode;
+    while (there is still data to read)
+    {
+        currcode = read in a code;
+        entry = translation of currcode from dictionary;
+        output entry;
+        ch = first char of entry;
+        add ((translation of prevcode)+ch) to dictionary;
+        prevcode = currcode;
+    }
+
     """
 
     def translate(code: int) -> str:
@@ -112,6 +108,9 @@ def main(
     debug: bool = True,
     write_to_file: bool = False,
 ):
+    """
+    The main entry point of the module.
+    """
     if archive and extract:
         print("Either archive or extract, not both")
         return
@@ -127,12 +126,12 @@ def main(
 
         if extract and ".lzw" not in filename:
             filename = filename + ".lzw"
-        with open(filename, "r") as f:
+        with open(filename, "r", encoding="UTF-8") as file:
             if archive:
-                output = compress(f.read())
+                output = compress(file.read())
                 outf_name = f"{filename}.lzw"
             else:
-                output = decompress(f.read())
+                output = decompress(file.read())
                 outf_name = f"{filename}.out"
     else:
         print("No operation specified")
@@ -140,10 +139,10 @@ def main(
     if write_to_file:
         # TODO: figure out a more efficient storage format for the compressed output
         # maybe check https://docs.python.org/3/library/codecs.html
-        with open(outf_name, "w") as outf:
+        with open(outf_name, "w", encoding="UTF-8") as outf:
             outf.write(output)
     logging.debug(f"Created output: `{output}`")
 
 
 if __name__ == "__main__":
-    typer.run(main)  # pragma: no cover
+    typer.run(main)

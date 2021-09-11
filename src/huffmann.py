@@ -10,17 +10,22 @@ from .utils.visualize_tree import print_tree
 
 
 def preprocess(data: str) -> Dict[str, int]:
+    """Generate character frequency dictionary from input data"""
     chardict = {}
-    for c in data:
-        if c in chardict:
-            chardict[c] += 1
+    for char in data:
+        if char in chardict:
+            chardict[char] += 1
         else:
-            chardict[c] = 1
+            chardict[char] = 1
     return chardict
 
 
 @dataclass
 class Node:
+    """
+    Single node of a nonstandard binary tree where every node has a `freq` field.
+    """
+
     freq: float
     symbol: Optional[str]
     left: Optional["Node"] = None
@@ -32,12 +37,20 @@ class Node:
 
 @dataclass
 class HuffmannResult:
+    """Represents"""
+
     encoded: str
     dictionary: Dict[str, str]
     bintree: Node
 
 
 def transform_bintree(root) -> Dict[str, str]:
+    """
+    Transforms the binary tree starting from `root` into a dictionary where dict[symbol]
+    contains the path to the node encoded as a binary string
+
+    Example: node located left left right from `root` gets value "001" in the resulting dict
+    """
     initial_binary = ""
     output = {}
     initial_stack = len(inspect.stack())
@@ -47,13 +60,7 @@ def transform_bintree(root) -> Dict[str, str]:
         print(curr_stack - initial_stack)
         yield currnode.symbol, curr_binary
         if currnode.left:
-            """
-            TODO: should this be
-            for i in helper(curr_binary + "0", currnode.left):
-                yield i
-            """
             yield from helper(curr_binary + "0", currnode.left)
-
         if currnode.right:
             yield from helper(curr_binary + "1", currnode.right)
 
