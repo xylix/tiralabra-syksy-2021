@@ -1,7 +1,7 @@
-import logging
-from typing import Dict, Optional, List, Iterable, Tuple
-from heapq import heappush, heappop
 from dataclasses import dataclass
+from heapq import heappop, heappush
+import logging
+from typing import Dict, Iterable, List, Optional, Tuple
 
 from .utils.visualize_tree import print_tree
 

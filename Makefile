@@ -8,6 +8,8 @@ coverage-file: coverage-generate
 	python -m coverage report > current_coverage.txt
 test:
 	python -m pytest
+test-with-benchmarks:
+	python -m pytest --runslow
 format:
 	black src
 	black test

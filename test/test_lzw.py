@@ -1,10 +1,12 @@
-from typing import Iterator
-from src import lzw
-import pytest
 import itertools
-import tempfile
-from shutil import copyfile
 from pathlib import Path
+from shutil import copyfile
+import tempfile
+from typing import Iterator
+
+import pytest
+
+from src import lzw
 
 
 # Once the algorithm works we will be able to use same test data, just in reverse
@@ -25,6 +27,13 @@ def temp_dir() -> Iterator[Path]:
             Path(dirname) / "test_lipsum_10_paragraphs.txt",
         )
         yield Path(dirname)
+
+
+@pytest.fixture
+def lipsum_string() -> str:
+    with open(Path(__file__).parent / TEST_LIPSUMFILE) as f:
+        data = f.read()
+    return data
 
 
 def test_compress():
@@ -57,3 +66,14 @@ def test_permutations_of_main_args(temp_dir):
     bools = [list(i) for i in itertools.product(l, repeat=4)]
     for permutation in bools:
         lzw.main(str(temp_dir / TEST_INFILE), *permutation)
+
+
+@pytest.mark.slow
+def test_benchmark_lzw_compression(lipsum_string, benchmark):
+    compressed = benchmark(lzw.compress, lipsum_string)
+
+
+@pytest.mark.slow
+def test_benchmark_lzw_decompression(lipsum_string, benchmark):
+    compressed = lzw.compress(lipsum_string)
+    decompressed = benchmark(lzw.decompress, compressed)

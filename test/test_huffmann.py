@@ -1,6 +1,9 @@
 from pathlib import Path
+
+import pytest
+
 from src import huffmann
-from src.huffmann import Node, HuffmannResult
+from src.huffmann import HuffmannResult, Node
 
 # fmt: off
 TEST_DATA = {
@@ -9,6 +12,13 @@ TEST_DATA = {
 # fmt: on
 
 TEST_LIPSUMFILE = "test_lipsum_10_paragraphs.txt"
+
+
+@pytest.fixture
+def lipsum_string() -> str:
+    with open(Path(__file__).parent / TEST_LIPSUMFILE) as f:
+        data = f.read()
+    return data
 
 
 def test_preprocess():
@@ -35,6 +45,17 @@ def test_longer_input_file():
     compressed = huffmann.compress(data)
     decompressed = huffmann.decompress(compressed)
     assert data == decompressed
+
+
+@pytest.mark.slow
+def test_benchmark_huffmann_compression(lipsum_string, benchmark):
+    compressed = benchmark(huffmann.compress, lipsum_string)
+
+
+@pytest.mark.slow
+def test_benchmark_huffmann_decompression(lipsum_string, benchmark):
+    compressed = huffmann.compress(lipsum_string)
+    decompressed = benchmark(huffmann.decompress, compressed)
 
 
 def test_main():
