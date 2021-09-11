@@ -107,7 +107,7 @@ def compress(data: str) -> HuffmannResult:
     return HuffmannResult(str(output), encoding_dict, q[0])
 
 
-def decompress(input: HuffmannResult):
+def decompress(input: HuffmannResult) -> str:
     """
     Procedure HuffmanDecompression(root, S):   // root represents the root of Huffman Tree
     n := S.length                              // S refers to bit-stream to be decompressed

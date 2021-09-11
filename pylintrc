@@ -1,0 +1,7 @@
+[MESSAGES CONTROL]
+
+disable=bad-continuation,bad-whitespace,logging-fstring-interpolation,line-too-long,logging-not-lazy
+
+[format]
+
+max-line-length=88
