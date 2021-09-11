@@ -1,4 +1,3 @@
-import inspect
 import logging
 from typing import Dict, Optional, List, Iterable, Tuple
 from heapq import heappush, heappop
@@ -10,7 +9,7 @@ from .utils.visualize_tree import print_tree
 
 
 def preprocess(data: str) -> Dict[str, int]:
-    """Generate character frequency dictionary from input data"""
+    """Generate character frequency dictionary from input_data data"""
     chardict = {}
     for char in data:
         if char in chardict:
@@ -32,7 +31,7 @@ class Node:
     right: Optional["Node"] = None
 
     def __lt__(self, other):
-        self.freq < other.freq
+        return self.freq < other.freq
 
 
 @dataclass
@@ -53,11 +52,8 @@ def transform_bintree(root) -> Dict[str, str]:
     """
     initial_binary = ""
     output = {}
-    initial_stack = len(inspect.stack())
 
     def helper(curr_binary, currnode) -> Iterable[Tuple[str, str]]:
-        curr_stack = len(inspect.stack())
-        print(curr_stack - initial_stack)
         yield currnode.symbol, curr_binary
         if currnode.left:
             yield from helper(curr_binary + "0", currnode.left)
@@ -115,7 +111,7 @@ def compress(data: str) -> HuffmannResult:
     return HuffmannResult(str(output), encoding_dict, q[0])
 
 
-def decompress(input: HuffmannResult) -> str:
+def decompress(input_data: HuffmannResult) -> str:
     # pylint: disable=invalid-name
     """
     Procedure HuffmanDecompression(root, S):   // root represents the root of Huffman Tree
@@ -134,8 +130,8 @@ def decompress(input: HuffmannResult) -> str:
     endfor
     """
     # Can't use handy dict for decompression because the tree also encodes the information of at what point which symbol terminates
-    S = input.encoded
-    root = input.bintree
+    S = input_data.encoded
+    root = input_data.bintree
     output = ""
     n = len(S)
     print(n)
@@ -166,6 +162,8 @@ def main():
     logging.debug("bintree: \n" + "\n".join(print_tree(compress_output.bintree)))
     logging.debug(f"encoded: {repr(compress_output.encoded)}")
     logging.debug(f"dict: {repr(compress_output.dictionary)}")
+
+    # logging.debug(repr(compress_output))
 
 
 if __name__ == "__main__":

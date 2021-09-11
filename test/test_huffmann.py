@@ -2,82 +2,12 @@ from pathlib import Path
 from src import huffmann
 from src.huffmann import Node, HuffmannResult
 
-
+# fmt: off
 TEST_DATA = {
-    "FIRST_SIMPLE_TEST_STRING": HuffmannResult(
-        encoded="001110100011110111111010110000101100001000001101111000001111110101111001111100011000011",
-        dictionary={
-            "E": "0000",
-            "M": "00010",
-            "G": "00011",
-            "L": "0010",
-            "N": "00110",
-            "F": "001110",
-            "R": "001111",
-            "S": "01",
-            "I": "10",
-            "P": "1100",
-            "_": "1101",
-            "T": "111",
-        },
-        bintree=Node(
-            freq=24,
-            symbol=None,
-            left=Node(
-                freq=13,
-                symbol=None,
-                left=Node(
-                    freq=9,
-                    symbol=None,
-                    left=Node(
-                        freq=4,
-                        symbol=None,
-                        left=Node(freq=2, symbol="E", left=None, right=None),
-                        right=Node(
-                            freq=2,
-                            symbol=None,
-                            left=Node(freq=1, symbol="M", left=None, right=None),
-                            right=Node(freq=1, symbol="G", left=None, right=None),
-                        ),
-                    ),
-                    right=Node(
-                        freq=5,
-                        symbol=None,
-                        left=Node(freq=1, symbol="L", left=None, right=None),
-                        right=Node(
-                            freq=4,
-                            symbol=None,
-                            left=Node(freq=1, symbol="N", left=None, right=None),
-                            right=Node(
-                                freq=3,
-                                symbol=None,
-                                left=Node(freq=1, symbol="F", left=None, right=None),
-                                right=Node(freq=2, symbol="R", left=None, right=None),
-                            ),
-                        ),
-                    ),
-                ),
-                right=Node(freq=4, symbol="S", left=None, right=None),
-            ),
-            right=Node(
-                freq=11,
-                symbol=None,
-                left=Node(freq=3, symbol="I", left=None, right=None),
-                right=Node(
-                    freq=8,
-                    symbol=None,
-                    left=Node(
-                        freq=4,
-                        symbol=None,
-                        left=Node(freq=1, symbol="P", left=None, right=None),
-                        right=Node(freq=3, symbol="_", left=None, right=None),
-                    ),
-                    right=Node(freq=4, symbol="T", left=None, right=None),
-                ),
-            ),
-        ),
-    )
+    "FIRST_SIMPLE_TEST_STRING": HuffmannResult(encoded='1010010011101100001111010010101101110101111101100111111000011110001110100010010110', dictionary={'T': '00', 'N': '0100', 'L': '0101', '_': '011', 'I': '100', 'F': '10100', 'M': '10101', 'G': '10110', 'P': '10111', 'S': '110', 'R': '1110', 'E': '1111'}, bintree=Node(freq=24, symbol=None, left=Node(freq=9, symbol=None, left=Node(freq=4, symbol='T', left=None, right=None), right=Node(freq=5, symbol=None, left=Node(freq=2, symbol=None, left=Node(freq=1, symbol='N', left=None, right=None), right=Node(freq=1, symbol='L', left=None, right=None)), right=Node(freq=3, symbol='_', left=None, right=None))), right=Node(freq=15, symbol=None, left=Node(freq=7, symbol=None, left=Node(freq=3, symbol='I', left=None, right=None), right=Node(freq=4, symbol=None, left=Node(freq=2, symbol=None, left=Node(freq=1, symbol='F', left=None, right=None), right=Node(freq=1, symbol='M', left=None, right=None)), right=Node(freq=2, symbol=None, left=Node(freq=1, symbol='G', left=None, right=None), right=Node(freq=1, symbol='P', left=None, right=None)))), right=Node(freq=8, symbol=None, left=Node(freq=4, symbol='S', left=None, right=None), right=Node(freq=4, symbol=None, left=Node(freq=2, symbol='R', left=None, right=None), right=Node(freq=2, symbol='E', left=None, right=None))))))
 }
+# fmt: on
+
 TEST_LIPSUMFILE = "test_lipsum_10_paragraphs.txt"
 
 
