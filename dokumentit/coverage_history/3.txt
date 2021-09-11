@@ -1,0 +1,9 @@
+Name                          Stmts   Miss  Cover
+-------------------------------------------------
+src/__init__.py                   0      0   100%
+src/huffmann.py                  89      2    98%
+src/lzw.py                       63      0   100%
+src/utils/__init__.py             0      0   100%
+src/utils/visualize_tree.py      44     14    68%
+-------------------------------------------------
+TOTAL                           196     16    92%
