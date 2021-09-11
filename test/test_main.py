@@ -1,3 +1,4 @@
+from io import UnsupportedOperation
 import itertools
 
 import pytest
@@ -11,12 +12,17 @@ def test_main_invalid_input():
         main.main(
             "nonexistent.txt", main.Operation.archive, True, False, main.Algorithm.lzw
         )
+    with pytest.raises(UnsupportedOperation):
         main.main(
             "nonexistent.txt.lzw",
             main.Operation.archive,
             True,
             False,
             main.Algorithm.lzw,
+        )
+    with pytest.raises(TypeError):
+        main.main(
+            "nonexistent.txt", "not_correct_enum", True, False, main.Algorithm.lzw
         )
 
 

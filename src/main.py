@@ -37,7 +37,10 @@ def main(
     elif compression_algorithm == Algorithm.huffmann:
         module = huffmann
     else:
-        raise Exception("Invalid algorithm specified")
+        raise TypeError("Invalid algorithm specified")
+
+    if operation not in Operation:
+        raise TypeError("Invalid operation")
 
     if debug:
         logging.basicConfig(level=logging.DEBUG)
@@ -46,8 +49,7 @@ def main(
     # logging.debug(f"Argument List: {sys.argv}")
 
     if operation == operation.archive and (".lzw" in filename or ".huff" in filename):
-        print("Do not archive already archived files")
-        return
+        raise UnsupportedOperation("Do not archive already archived files")
 
     if operation.archive:
         with open(filename, "r", encoding="UTF-8") as file:

@@ -150,24 +150,3 @@ def decompress(input_data: HuffmannResult) -> str:
         assert current.symbol
         output += current.symbol
     return output
-
-
-def main():
-    """
-    Huffmann modules entry point
-    """
-    debug = True
-    if debug:
-        logging.basicConfig(level=logging.DEBUG)
-    else:
-        logging.basicConfig(level=logging.WARNING)
-    compress_output = compress("FIRST_SIMPLE_TEST_STRING")
-    logging.debug("bintree: \n" + "\n".join(print_tree(compress_output.bintree)))
-    logging.debug(f"encoded: {repr(compress_output.encoded)}")
-    logging.debug(f"dict: {repr(compress_output.dictionary)}")
-
-    # logging.debug(repr(compress_output))
-
-
-if __name__ == "__main__":
-    main()
