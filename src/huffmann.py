@@ -1,3 +1,4 @@
+import inspect
 import logging
 from typing import Dict, Optional, List, Iterable, Tuple
 from heapq import heappush, heappop
@@ -39,10 +40,18 @@ class HuffmannResult:
 def transform_bintree(root) -> Dict[str, str]:
     initial_binary = ""
     output = {}
+    initial_stack = len(inspect.stack())
 
     def helper(curr_binary, currnode) -> Iterable[Tuple[str, str]]:
+        curr_stack = len(inspect.stack())
+        print(curr_stack - initial_stack)
         yield currnode.symbol, curr_binary
         if currnode.left:
+            """
+            TODO: should this be
+            for i in helper(curr_binary + "0", currnode.left):
+                yield i
+            """
             yield from helper(curr_binary + "0", currnode.left)
 
         if currnode.right:
@@ -78,7 +87,6 @@ def compress(data: str) -> HuffmannResult:
     for symbol, freq in c.items():
         node = Node(freq, symbol)
         heappush(q, node)
-    # FIXME: it seems there is some problem with the tree's weighting. It leans heavily to the left
     while len(q) > 1:
         left = heappop(q)
         right = heappop(q)
@@ -117,18 +125,24 @@ def decompress(input: HuffmannResult):
     endfor
     """
     # Can't use handy dict for decompression because the tree also encodes the information of at what point which symbol terminates
-    data = input.encoded
+    S = input.encoded
+    root = input.bintree
     output = ""
-    n = len(data)
-    for i in range(n):
-        current = input.bintree
+    n = len(S)
+    print(n)
+    # While instead of for because it's easier to skip entries with this than with Python's for
+    i = 0
+    while i < n:
+        current = root
+        # We can use and here since the tree is balanced
         while current.left and current.right:
-            if data[i] == 0:
+            if S[i] == 0:
                 current = current.left
             else:
                 current = current.right
-            i += 1
-        output += current.symbol or ""
+            i = i + 1
+        assert current.symbol
+        output += current.symbol
     return output
 
 
