@@ -111,7 +111,7 @@ def main(
     write_to_file: bool = False,
 ):
     """
-    The main entry point of the module.
+    LZW modules entry point
     """
     if archive and extract:
         print("Either archive or extract, not both")

@@ -153,6 +153,9 @@ def decompress(input_data: HuffmannResult) -> str:
 
 
 def main():
+    """
+    Huffmann modules entry point
+    """
     debug = True
     if debug:
         logging.basicConfig(level=logging.DEBUG)
