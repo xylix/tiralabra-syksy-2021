@@ -7,6 +7,7 @@ START_DICT: Dict[str, int] = {chr(i): i for i in range(128)}
 
 
 def compress(input_data: str) -> str:
+    # pylint: disable=invalid-name
     """
     Takes in an input string and returns a compressed version of it.
 
@@ -53,6 +54,7 @@ def compress(input_data: str) -> str:
 
 
 def decompress(input_data: str) -> str:
+    # pylint: disable=invalid-name
     """
     extracts and .lzw file into {filename}.out
 

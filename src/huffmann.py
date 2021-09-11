@@ -47,7 +47,7 @@ class HuffmannResult:
 def transform_bintree(root) -> Dict[str, str]:
     """
     Transforms the binary tree starting from `root` into a dictionary where dict[symbol]
-    contains the path to the node encoded as a binary string
+    contains the path to the node encoded as a binary string.
 
     Example: node located left left right from `root` gets value "001" in the resulting dict
     """
@@ -72,6 +72,7 @@ def transform_bintree(root) -> Dict[str, str]:
 
 
 def compress(data: str) -> HuffmannResult:
+    # pylint: disable=invalid-name
     """
     Procedure Huffman(C):     // C is the set of n characters and related information
     n = C.size
@@ -115,6 +116,7 @@ def compress(data: str) -> HuffmannResult:
 
 
 def decompress(input: HuffmannResult) -> str:
+    # pylint: disable=invalid-name
     """
     Procedure HuffmanDecompression(root, S):   // root represents the root of Huffman Tree
     n := S.length                              // S refers to bit-stream to be decompressed
