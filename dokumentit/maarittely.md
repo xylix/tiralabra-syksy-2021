@@ -29,7 +29,7 @@ Program and compare implementations of LZW and Huffman coding. They are both pop
 
 The compression % targets depend on the data set. The goal is to match some comparable implementation's compression % and have compatible input and output formats. The specific files for benchmarking will be decided when the performance benchmarking is implemented, so around week 5.
 
-* Huffmann %
+* Huffman %
   * File 1, 12 paragraphs of lorem ipsum. Target compression % still unclear.
   * File 2, still to decide.
 
@@ -38,7 +38,7 @@ The compression % targets depend on the data set. The goal is to match some comp
   * File 2, still to decide.
 
 Both algorithms are O(n) in their complexity, the use of hash-based data structures and necessity of only a single pass over the input data means that the execution time scales linearly.
-  * However when adding un-optimized compression or decompression using the generated Huffmann encoding bin tree that is `n log n` since the binary tree needs to be traversed for every symbol encoded. (Easy to optimize this to `O(n)` for the compression, harder to optimize for the decompression.)
+  * However when adding un-optimized compression or decompression using the generated Huffman encoding bin tree that is `n log n` since the binary tree needs to be traversed for every symbol encoded. (Easy to optimize this to `O(n)` for the compression, harder to optimize for the decompression.)
 
 
 ## Sources

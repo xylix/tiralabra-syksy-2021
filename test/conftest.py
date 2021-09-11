@@ -1,7 +1,7 @@
 from pathlib import Path
 from shutil import copyfile
 import tempfile
-from test.test_huffmann import TEST_LIPSUMFILE
+from test.test_huffman import TEST_LIPSUMFILE
 from test.utils import TEST_INFILE, TEST_OUTFILE
 from typing import Iterator
 

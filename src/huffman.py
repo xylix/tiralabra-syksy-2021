@@ -35,7 +35,7 @@ class Node:
 
 
 @dataclass
-class HuffmannResult:
+class HuffmanResult:
     """Represents"""
 
     encoded: str
@@ -67,7 +67,7 @@ def transform_bintree(root) -> Dict[str, str]:
     return output
 
 
-def compress(data: str) -> HuffmannResult:
+def compress(data: str) -> HuffmanResult:
     # pylint: disable=invalid-name
     """
     Procedure Huffman(C):     // C is the set of n characters and related information
@@ -108,10 +108,10 @@ def compress(data: str) -> HuffmannResult:
     for char in data:
         encoded_char: str = encoding_dict[char]
         output += encoded_char
-    return HuffmannResult(str(output), encoding_dict, q[0])
+    return HuffmanResult(str(output), encoding_dict, q[0])
 
 
-def decompress(input_data: HuffmannResult) -> str:
+def decompress(input_data: HuffmanResult) -> str:
     # pylint: disable=invalid-name
     """
     Procedure HuffmanDecompression(root, S):   // root represents the root of Huffman Tree

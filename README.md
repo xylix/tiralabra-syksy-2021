@@ -9,9 +9,9 @@ Setup: create virtualenv (or don't) and run `pip install -r dev-requirements.txt
 Command line help: `python -m src.main --help`
 
 Compress `filename` with LZW : `python -m src.main filename --operation archive --algorithm lzw`
-Compress `filename` with Huffmann coding: `python -m src.main filename --operation archive --algorithm huffmann`
+Compress `filename` with Huffman coding: `python -m src.main filename --operation archive --algorithm huffman`
 
-Extract `filename` (that has either .lzw or .huffmann extension) : `python -m src.main filename --operation extract `
+Extract `filename` (that has either .lzw or .huffman extension) : `python -m src.main filename --operation extract `
 
 
 Run tests: `make test` 

@@ -1,18 +1,19 @@
 from enum import Enum
 from io import UnsupportedOperation
 import logging
+from pathlib import Path
 import pickle
 from typing import Optional
 
 import typer
 
 from . import lzw
-from . import huffmann
+from . import huffman
 
 
 class Algorithm(Enum):
     lzw = "lzw"
-    huffmann = "huffmann"
+    huffman = "huffman"
 
 
 class Operation(Enum):
@@ -26,7 +27,7 @@ def main(
     operation: Operation = Operation.auto,
     debug: bool = True,
     write_to_file: bool = False,
-    compression_algorithm: Algorithm = Algorithm.huffmann,
+    compression_algorithm: Algorithm = Algorithm.huffman,
 ):
     """
     LZW modules entry point
@@ -34,8 +35,8 @@ def main(
 
     if compression_algorithm == Algorithm.lzw:
         module = lzw
-    elif compression_algorithm == Algorithm.huffmann:
-        module = huffmann
+    elif compression_algorithm == Algorithm.huffman:
+        module = huffman
     else:
         raise TypeError("Invalid algorithm specified")
 
@@ -51,16 +52,29 @@ def main(
     if operation == operation.archive and (".lzw" in filename or ".huff" in filename):
         raise UnsupportedOperation("Do not archive already archived files")
 
-    if operation.archive:
+    def compress():
         with open(filename, "r", encoding="UTF-8") as file:
             output = module.compress(file.read())
             outf_name = f"{filename}.{compression_algorithm.value}"
-    elif operation.extract:
+        return output, outf_name
+
+    def decompress():
         with open(filename, "rb") as file:
             output = module.decompress(pickle.load(file))
             outf_name = f"{filename}.out"
-    else:
+        return output, outf_name
+
+    if operation.archive:
+        output, outf_name = compress()
+    elif operation.extract:
+        output, outf_name = decompress()
+    elif operation.auto:
+        infile = Path(filename)
+        if infile.suffix in [".lzw", ".huffman"]:
+            pass
+
         # TODO: figure out the operation from filename
+    else:
         raise UnsupportedOperation()
 
     if write_to_file:
