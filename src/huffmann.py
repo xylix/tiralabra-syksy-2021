@@ -139,8 +139,9 @@ def main():
     else:
         logging.basicConfig(level=logging.WARNING)
     compress_output = compress("FIRST_SIMPLE_TEST_STRING")
-    logging.debug("\n" + "\n".join(print_tree(compress_output.bintree)))
-    # logging.debug(repr(compress_output))
+    logging.debug("bintree: \n" + "\n".join(print_tree(compress_output.bintree)))
+    logging.debug(f"encoded: {repr(compress_output.encoded)}")
+    logging.debug(f"dict: {repr(compress_output.dictionary)}")
 
 
 if __name__ == "__main__":
