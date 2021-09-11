@@ -56,7 +56,3 @@ def test_benchmark_huffmann_compression(lipsum_string, benchmark):
 def test_benchmark_huffmann_decompression(lipsum_string, benchmark):
     compressed = huffmann.compress(lipsum_string)
     decompressed = benchmark(huffmann.decompress, compressed)
-
-
-def test_main():
-    huffmann.main()

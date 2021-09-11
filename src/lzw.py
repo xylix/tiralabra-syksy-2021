@@ -1,8 +1,6 @@
 import logging
 from typing import Dict
 
-import typer
-
 
 START_DICT: Dict[str, int] = {chr(i): i for i in range(128)}
 
@@ -102,50 +100,3 @@ def decompress(input_data: str) -> str:
         prevcode = int(currcode)
 
     return output
-
-
-def main(
-    filename: str,
-    archive: bool = False,
-    extract: bool = False,
-    debug: bool = True,
-    write_to_file: bool = False,
-):
-    """
-    LZW modules entry point
-    """
-    if archive and extract:
-        print("Either archive or extract, not both")
-        return
-    if debug:
-        logging.basicConfig(level=logging.DEBUG)
-    else:
-        logging.basicConfig(level=logging.WARNING)
-    # logging.debug(f"Argument List: {sys.argv}")
-    if archive or extract:
-        if archive and ".lzw" in filename:
-            print("Do not archive already archived files")
-            return
-
-        if extract and ".lzw" not in filename:
-            filename = filename + ".lzw"
-        with open(filename, "r", encoding="UTF-8") as file:
-            if archive:
-                output = compress(file.read())
-                outf_name = f"{filename}.lzw"
-            else:
-                output = decompress(file.read())
-                outf_name = f"{filename}.out"
-    else:
-        print("No operation specified")
-        return
-    if write_to_file:
-        # TODO: figure out a more efficient storage format for the compressed output
-        # maybe check https://docs.python.org/3/library/codecs.html
-        with open(outf_name, "w", encoding="UTF-8") as outf:
-            outf.write(output)
-    logging.debug(f"Created output: `{output}`")
-
-
-if __name__ == "__main__":
-    typer.run(main)

@@ -1,6 +1,15 @@
 # Lzhuff
 
 Kerkko Pelttari's algorithm project course work in fall 2021.
+
+## Quickstart
+
+Setup: create virtualenv (or don't) and run `pip install -r dev-requirements.txt`
+
+Run tests: `make test` 
+Run performance tests: `make test-with-benchmarks`
+
+
 ## Course documents
 * [Definition document / määrittelydokumentti ](https://github.com/xylix/tiralabra-syksy-2021/blob/main/dokumentit/maarittely.md)
 * [User guide  / käyttöohje](https://github.com/xylix/tiralabra-syksy-2021/blob/main/dokumentit/kayttoohje.md)
