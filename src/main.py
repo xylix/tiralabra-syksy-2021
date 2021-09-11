@@ -1,6 +1,8 @@
 from enum import Enum
+from io import UnsupportedOperation
 import logging
 import pickle
+from typing import Optional
 
 import typer
 
@@ -13,10 +15,15 @@ class Algorithm(Enum):
     huffmann = "huffmann"
 
 
+class Operation(Enum):
+    archive = "archive"
+    extract = "extract"
+    auto = "auto"
+
+
 def main(
     filename: str,
-    archive: bool = False,
-    extract: bool = False,
+    operation: Operation = Operation.auto,
     debug: bool = True,
     write_to_file: bool = False,
     compression_algorithm: Algorithm = Algorithm.huffmann,
@@ -30,34 +37,30 @@ def main(
     elif compression_algorithm == Algorithm.huffmann:
         module = huffmann
     else:
-        raise Exception("Invalid module specified")
+        raise Exception("Invalid algorithm specified")
 
-    if archive and extract:
-        print("Either archive or extract, not both")
-        return
     if debug:
         logging.basicConfig(level=logging.DEBUG)
     else:
         logging.basicConfig(level=logging.WARNING)
     # logging.debug(f"Argument List: {sys.argv}")
-    if archive or extract:
-        if archive and ".lzw" in filename:
-            print("Do not archive already archived files")
-            return
 
-        if extract and ".lzw" not in filename:
-            filename = filename + ".lzw"
-        # TODO: does the encoding do anything when working with binary
-        with open(filename, "rb") as file:
-            if archive:
-                output = module.compress(pickle.load(file))
-                outf_name = f"{filename}.{compression_algorithm}"
-            else:
-                output = module.decompress(pickle.load(file))
-                outf_name = f"{filename}.out"
-    else:
-        print("No operation specified")
+    if operation == operation.archive and (".lzw" in filename or ".huff" in filename):
+        print("Do not archive already archived files")
         return
+
+    if operation.archive:
+        with open(filename, "r", encoding="UTF-8") as file:
+            output = module.compress(file.read())
+            outf_name = f"{filename}.{compression_algorithm.value}"
+    elif operation.extract:
+        with open(filename, "rb") as file:
+            output = module.decompress(pickle.load(file))
+            outf_name = f"{filename}.out"
+    else:
+        # TODO: figure out the operation from filename
+        raise UnsupportedOperation()
+
     if write_to_file:
         # TODO: figure out a more efficient storage format for the compressed output
         # maybe check https://docs.python.org/3/library/codecs.html

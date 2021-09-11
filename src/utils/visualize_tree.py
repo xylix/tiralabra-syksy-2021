@@ -3,7 +3,9 @@
 # Modified
 
 
-def print_tree(root, val="symbol", left="left", right="right") -> list[str]:
+def print_tree(
+    root, val="symbol", left="left", right="right"
+) -> list[str]:  # pragma: no cover
     def val_to_string(node):
         value = getattr(node, val)
         if value:
