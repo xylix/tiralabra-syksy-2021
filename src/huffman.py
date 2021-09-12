@@ -3,17 +3,16 @@ from heapq import heappop, heappush
 import logging
 from typing import Dict, Iterable, List, Optional, Tuple
 
-from src.utils.binary import number_to_binary
+from src.utils import visualize_tree
 
 from .utils.visualize_tree import print_tree
-from src.utils import visualize_tree
 
 # Pseudocode examples from https://riptutorial.com/algorithm/example/23995/huffman-coding
 
 
-def preprocess(data: bytes) -> Dict[str, int]:
+def preprocess(data: bytes) -> Dict[int, int]:
     """Generate character frequency dictionary from input_data data"""
-    chardict = {}
+    chardict: Dict[int, int] = {}
     for char in data:
         if char in chardict:
             chardict[char] += 1
@@ -29,7 +28,7 @@ class Node:
     """
 
     freq: float
-    symbol: Optional[str]
+    symbol: Optional[int]
     left: Optional["Node"] = None
     right: Optional["Node"] = None
 
@@ -39,7 +38,10 @@ class Node:
 
 @dataclass
 class HuffmanResult:
-    """Represents"""
+    """
+    Represents result of creating the huffman encoding,
+    containing the encoded message and the encoding tree.
+    """
 
     encoded: int
     bintree: Node
@@ -92,6 +94,7 @@ def compress(data: bytes) -> HuffmanResult:
     q: List[Node] = []
     for symbol, freq in c.items():
         node = Node(freq, symbol)
+        logging.debug(f"node: {node}")
         heappush(q, node)
     while len(q) > 1:
         left = heappop(q)
@@ -101,8 +104,8 @@ def compress(data: bytes) -> HuffmanResult:
         heappush(q, z)
 
     # logging.debug(q[0])
+    # logging.debug(visualize_tree.print_tree(q[0]))
     # Transform the binary tree to a dictionary
-    logging.debug(visualize_tree.print_tree(q[0]))
     encoding_dict = transform_bintree(q[0])
     logging.debug(encoding_dict)
 
@@ -110,7 +113,7 @@ def compress(data: bytes) -> HuffmanResult:
     output: str = ""
     for char in data:
         encoded_char: str = encoding_dict[char]
-        logging.debug(f"Outputting code: `{int(encoded_char, 2)}` for symbol `{char}`")
+        # logging.debug(f"Outputting code: `{int(encoded_char, 2)}` for symbol `{char}`")
         output += encoded_char
     encoded_output = int(output, base=2)
     return HuffmanResult(encoded_output, q[0])
@@ -160,5 +163,5 @@ def decompress(input_data: HuffmanResult) -> str:
             i = i + 1
         # The terminal nodes should always have a symbol
         assert current.symbol
-        output += current.symbol
+        output += chr(current.symbol)
     return output
