@@ -1,4 +1,5 @@
 import logging
+import pickle
 from sys import getsizeof
 from typing import Dict
 
@@ -60,7 +61,7 @@ def compress(input_data: bytes) -> bytes:
     return output
 
 
-def decompress(input_data: str) -> bytes:
+def decompress(raw_data: bytes) -> bytes:
     # pylint: disable=invalid-name
     """
     extracts and .lzw file into {filename}.out
@@ -85,6 +86,9 @@ def decompress(input_data: str) -> bytes:
     }
 
     """
+
+    # TODO: just use the binary data herre
+    input_data: str = pickle.loads(raw_data)
 
     def translate(code: int) -> str:
         return list(dictionary.keys())[int(code)]

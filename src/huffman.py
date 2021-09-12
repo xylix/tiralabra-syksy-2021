@@ -1,7 +1,9 @@
 from dataclasses import dataclass
 from heapq import heappop, heappush
 import logging
+import pickle
 from typing import Dict, Iterable, List, Optional, Tuple
+from sys import getsizeof
 
 from src.utils import visualize_tree
 
@@ -71,7 +73,7 @@ def transform_bintree(root) -> Dict[int, str]:
     return output
 
 
-def compress(data: bytes) -> HuffmanResult:
+def compress(data: bytes) -> bytes:
     # pylint: disable=invalid-name
     """
     Procedure Huffman(C):     // C is the set of n characters and related information
@@ -116,10 +118,12 @@ def compress(data: bytes) -> HuffmanResult:
         # logging.debug(f"Outputting code: `{int(encoded_char, 2)}` for symbol `{char}`")
         output += encoded_char
     encoded_output = int(output, base=2)
-    return HuffmanResult(encoded_output, q[0])
+
+    logging.debug(f"Compression ratio: { getsizeof(output) / getsizeof(data) }")
+    return pickle.dumps(HuffmanResult(encoded_output, q[0]))
 
 
-def decompress(input_data: HuffmanResult) -> str:
+def decompress(raw_data: bytes) -> bytes:
     # pylint: disable=invalid-name
     """
 
@@ -141,6 +145,7 @@ def decompress(input_data: HuffmanResult) -> str:
     Decompress a huffman encoded data, requires the encoded data and the huffman tree as input
 
     """
+    input_data: HuffmanResult = pickle.loads(raw_data)
     logging.debug(input_data)
     # Can't use handy dict for decompression because the tree also encodes the information of at what point which symbol terminates
     encoded = input_data.encoded
@@ -164,4 +169,4 @@ def decompress(input_data: HuffmanResult) -> str:
         # The terminal nodes should always have a symbol
         assert current.symbol
         output += chr(current.symbol)
-    return output
+    return bytes("".join(output), encoding="ascii")

@@ -68,7 +68,7 @@ def main(
 
     def decompress():
         with open(filename, "rb") as file:
-            output = module.decompress(pickle.load(file))
+            output = module.decompress(file.read())
             outf_name = f"{filename}.out"
         return output, outf_name
 
@@ -86,7 +86,7 @@ def main(
             module = lzw
         elif infile.suffix == ".huffman":
             module = huffman
-
+        output: bytes
         if infile.suffix in SUPPORTED_ARCHIVES:
             output, outf_name = decompress()
         # TODO: add more supported input types
@@ -106,7 +106,7 @@ def main(
         # maybe check https://docs.python.org/3/library/codecs.html
         with open(outf_name, "wb") as outf:
             # outf.write(bytes(output)
-            pickle.dump(output, outf)
+            outf.write(output)
     logging.debug(f"Created output: `{output}`")
 
 
