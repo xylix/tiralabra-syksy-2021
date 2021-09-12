@@ -61,7 +61,7 @@ def main(
         raise UnsupportedOperation("Do not archive already archived files")
 
     def compress():
-        with open(filename, "r", encoding="UTF-8") as file:
+        with open(filename, "rb") as file:
             output = module.compress(file.read())
             outf_name = f"{filename}.{algo.value}"
         return output, outf_name
@@ -81,6 +81,12 @@ def main(
         output, outf_name = decompress()
     elif operation == operation.auto:
         logging.debug(f"Suffix: `{infile.suffix}`")
+
+        if infile.suffix == ".lzw":
+            module = lzw
+        elif infile.suffix == ".huffman":
+            module = huffman
+
         if infile.suffix in SUPPORTED_ARCHIVES:
             output, outf_name = decompress()
         # TODO: add more supported input types
