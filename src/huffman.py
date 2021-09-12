@@ -6,6 +6,7 @@ from typing import Dict, Iterable, List, Optional, Tuple
 from src.utils.binary import number_to_binary
 
 from .utils.visualize_tree import print_tree
+from src.utils import visualize_tree
 
 # Pseudocode examples from https://riptutorial.com/algorithm/example/23995/huffman-coding
 
@@ -40,7 +41,7 @@ class Node:
 class HuffmanResult:
     """Represents"""
 
-    encoded: bytes
+    encoded: int
     bintree: Node
 
 
@@ -101,34 +102,63 @@ def compress(data: bytes) -> HuffmanResult:
 
     # logging.debug(q[0])
     # Transform the binary tree to a dictionary
+    logging.debug(visualize_tree.print_tree(q[0]))
     encoding_dict = transform_bintree(q[0])
     logging.debug(encoding_dict)
 
     # Use the created binary tree to encode the data. Could not find a pseudo code for this, might need to create one.
-    output: bytes = bytes()
+    output: str = ""
     for char in data:
         encoded_char: str = encoding_dict[char]
-        output += number_to_binary(int(encoded_char, 2))
-    return HuffmanResult(output, q[0])
+        logging.debug(f"Outputting code: `{int(encoded_char, 2)}` for symbol `{char}`")
+        output += encoded_char
+    encoded_output = int(output, base=2)
+    return HuffmanResult(encoded_output, q[0])
 
 
 def decompress(input_data: HuffmanResult) -> str:
     # pylint: disable=invalid-name
     """
+
+    Procedure HuffmanDecompression(root, S):   // root represents the root of Huffman Tree
+    n := S.length                              // S refers to bit-stream to be decompressed
+    for i := 1 to n
+        current = root
+        while current.left != NULL and current.right != NULL
+            if S[i] is equal to '0'
+                current := current.left
+            else
+                current := current.right
+            endif
+            i := i+1
+        endwhile
+        print current.symbol
+    endfor
+
     Decompress a huffman encoded data, requires the encoded data and the huffman tree as input
 
     """
     logging.debug(input_data)
     # Can't use handy dict for decompression because the tree also encodes the information of at what point which symbol terminates
-    S: bytes = input_data.encoded
-    handy_dict = transform_bintree(input_data.bintree)
-    dictionary = dict((v, k) for k, v in handy_dict.items())
+    encoded = input_data.encoded
+    S = bin(encoded)[2:]
 
-    def translate(code: int) -> str:
-        # There is probably a bit operator for this
-        transformed_code = bin(code)[2:]
-        logging.debug(transformed_code)
-
-        return chr(dictionary[transformed_code])
-
-    return "".join([translate(i) for i in S])
+    root = input_data.bintree
+    output = ""
+    n = len(S)
+    print(n)
+    # While instead of for because it's easier to skip entries with this than with Python's for
+    i = 0
+    while i < n:
+        current = root
+        # We can use and here since the tree is balanced
+        while current.left and current.right:
+            if S[i] == "0":
+                current = current.left
+            else:
+                current = current.right
+            i = i + 1
+        # The terminal nodes should always have a symbol
+        assert current.symbol
+        output += current.symbol
+    return output
