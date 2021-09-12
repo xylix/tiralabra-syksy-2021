@@ -6,7 +6,7 @@ from src import lzw
 
 # Once the algorithm works we will be able to use same test data, just in reverse
 
-TEST_DATA = {"banana_bandana\n": "98,97,110,129,97,95,128,110,100,131,10"}
+TEST_DATA = {b"banana_bandana\n": b"ban\x81a_\x80nd\x83\n"}
 
 
 def test_compress():
@@ -22,7 +22,7 @@ def test_decompress():
 
 
 def test_compress_decompress_should_negate(temp_dir):
-    with open(temp_dir / TEST_LIPSUMFILE) as f:
+    with open(temp_dir / TEST_LIPSUMFILE, "rb") as f:
         data = f.read()
     compressed = lzw.compress(data)
     decompressed = lzw.decompress(compressed)

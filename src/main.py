@@ -105,6 +105,7 @@ def main(
         # TODO: figure out a more efficient storage format for the compressed output
         # maybe check https://docs.python.org/3/library/codecs.html
         with open(outf_name, "wb") as outf:
+            # outf.write(bytes(output)
             pickle.dump(output, outf)
     logging.debug(f"Created output: `{output}`")
 

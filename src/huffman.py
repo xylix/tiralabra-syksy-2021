@@ -3,12 +3,14 @@ from heapq import heappop, heappush
 import logging
 from typing import Dict, Iterable, List, Optional, Tuple
 
+from src.utils.binary import number_to_binary
+
 from .utils.visualize_tree import print_tree
 
 # Pseudocode examples from https://riptutorial.com/algorithm/example/23995/huffman-coding
 
 
-def preprocess(data: str) -> Dict[str, int]:
+def preprocess(data: bytes) -> Dict[str, int]:
     """Generate character frequency dictionary from input_data data"""
     chardict = {}
     for char in data:
@@ -38,12 +40,11 @@ class Node:
 class HuffmanResult:
     """Represents"""
 
-    encoded: str
-    dictionary: Dict[str, str]
+    encoded: bytes
     bintree: Node
 
 
-def transform_bintree(root) -> Dict[str, str]:
+def transform_bintree(root) -> Dict[int, str]:
     """
     Transforms the binary tree starting from `root` into a dictionary where dict[symbol]
     contains the path to the node encoded as a binary string.
@@ -67,7 +68,7 @@ def transform_bintree(root) -> Dict[str, str]:
     return output
 
 
-def compress(data: str) -> HuffmanResult:
+def compress(data: bytes) -> HuffmanResult:
     # pylint: disable=invalid-name
     """
     Procedure Huffman(C):     // C is the set of n characters and related information
@@ -104,49 +105,30 @@ def compress(data: str) -> HuffmanResult:
     logging.debug(encoding_dict)
 
     # Use the created binary tree to encode the data. Could not find a pseudo code for this, might need to create one.
-    output = ""
+    output: bytes = bytes()
     for char in data:
         encoded_char: str = encoding_dict[char]
-        output += encoded_char
-    return HuffmanResult(str(output), encoding_dict, q[0])
+        output += number_to_binary(int(encoded_char, 2))
+    return HuffmanResult(output, q[0])
 
 
 def decompress(input_data: HuffmanResult) -> str:
     # pylint: disable=invalid-name
     """
-    Procedure HuffmanDecompression(root, S):   // root represents the root of Huffman Tree
-    n := S.length                              // S refers to bit-stream to be decompressed
-    for i := 1 to n
-        current = root
-        while current.left != NULL and current.right != NULL
-            if S[i] is equal to '0'
-                current := current.left
-            else
-                current := current.right
-            endif
-            i := i+1
-        endwhile
-        print current.symbol
-    endfor
+    Decompress a huffman encoded data, requires the encoded data and the huffman tree as input
+
     """
+    logging.debug(input_data)
     # Can't use handy dict for decompression because the tree also encodes the information of at what point which symbol terminates
-    S = input_data.encoded
-    root = input_data.bintree
-    output = ""
-    n = len(S)
-    print(n)
-    # While instead of for because it's easier to skip entries with this than with Python's for
-    i = 0
-    while i < n:
-        current = root
-        # We can use and here since the tree is balanced
-        while current.left and current.right:
-            if S[i] == "0":
-                current = current.left
-            else:
-                current = current.right
-            i = i + 1
-        # The terminal nodes should always have a symbol
-        assert current.symbol
-        output += current.symbol
-    return output
+    S: bytes = input_data.encoded
+    handy_dict = transform_bintree(input_data.bintree)
+    dictionary = dict((v, k) for k, v in handy_dict.items())
+
+    def translate(code: int) -> str:
+        # There is probably a bit operator for this
+        transformed_code = bin(code)[2:]
+        logging.debug(transformed_code)
+
+        return chr(dictionary[transformed_code])
+
+    return "".join([translate(i) for i in S])

@@ -1,12 +1,8 @@
 import logging
-import struct
+from sys import getsizeof
 from typing import Dict
 
-
-def number_to_binary(i: int) -> bytes:
-    # TODO: for non-ascii data or anyway, we might want to use unsigned short instead.
-    # docs at https://docs.python.org/3/library/struct.html#format-characters
-    return struct.pack("B", i)
+from src.utils.binary import number_to_binary
 
 
 START_DICT: Dict[str, bytes] = {chr(i): number_to_binary(i) for i in range(128)}
@@ -60,6 +56,7 @@ def compress(input_data: bytes) -> bytes:
             s = ch
     output += dictionary[s]
     logging.debug(f"dict: {dictionary}")
+    logging.debug(f"Compression ratio: { getsizeof(output) / getsizeof(input_data) }")
     return output
 
 
@@ -104,7 +101,7 @@ def decompress(input_data: str) -> bytes:
         logging.debug(f"currcode's decoded value: {repr(entry)}")
         output.append(entry)
         ch = entry[0]
-        dictionary[translate(prevcode) + ch] = len(dictionary.items())
+        dictionary[translate(prevcode) + ch] = number_to_binary(len(dictionary.items()))
         logging.debug(
             f"added translation {translate(prevcode) + ch}: {len(dictionary.items())}"
         )
