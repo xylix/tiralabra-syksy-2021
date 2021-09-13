@@ -64,6 +64,7 @@ def compress(input_data: bytes) -> bytes:
         else:
             output.append(dictionary[s])
             # If we are encoding as python integers, the only limit could be how big of a dict can fit into ram
+            # Also the dictionary needs to stay some percentage of the size of the input
             if len(dictionary) < MAX_DICT:
                 dictionary[s + ch] = len(dictionary)
             s = ch
