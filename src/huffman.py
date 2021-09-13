@@ -49,6 +49,24 @@ class HuffmanResult:
 
 
 def create_huffman_tree(c: Dict[int, int]) -> List[Node]:
+    """
+    Procedure Huffman(C):     // C is the set of n characters and related information
+    n = C.size
+    Q = priority_queue()
+    for i = 1 to n
+        n = node(C[i])
+        Q.push(n)
+    end for
+    while Q.size() is not equal to 1
+        Z = new node()
+        Z.left = x = Q.pop
+        Z.right = y = Q.pop
+        Z.frequency = x.frequency + y.frequency
+        Q.push(Z)
+    end while
+    Return Q
+    """
+    # pylint: disable=invalid-name
     q: List[Node] = []
     for symbol, freq in c.items():
         node = Node(freq, symbol)
@@ -89,24 +107,6 @@ def transform_bintree(root) -> Dict[int, str]:
 
 
 def compress(data: bytes) -> bytes:
-    # pylint: disable=invalid-name
-    """
-    Procedure Huffman(C):     // C is the set of n characters and related information
-    n = C.size
-    Q = priority_queue()
-    for i = 1 to n
-        n = node(C[i])
-        Q.push(n)
-    end for
-    while Q.size() is not equal to 1
-        Z = new node()
-        Z.left = x = Q.pop
-        Z.right = y = Q.pop
-        Z.frequency = x.frequency + y.frequency
-        Q.push(Z)
-    end while
-    Return Q
-    """
     c = preprocess(data)
     q = create_huffman_tree(c)
     # logging.debug(q[0])

@@ -108,7 +108,8 @@ def main(
         with open(outf_name, "wb") as outf:
             # outf.write(bytes(output)
             outf.write(output)
-    logging.debug(f"Created output: `{output}`")
+    if len(output) < 16000:
+        logging.debug(f"Created output: `{output}`")
     print(
         f"Compressed {len(input_data)} bytes to {len(output)} bytes, ratio: { len(output) / len(input_data) }"
     )
