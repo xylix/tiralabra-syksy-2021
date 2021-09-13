@@ -6,7 +6,9 @@ from src import lzw
 
 # Once the algorithm works we will be able to use same test data, just in reverse
 
-TEST_DATA = {b"banana_bandana\n": b"ban\x81a_\x80nd\x83\n"}
+TEST_DATA = {
+    b"banana_bandana\n": b"\x80\x04\x95\x1b\x00\x00\x00\x00\x00\x00\x00]\x94(KbKaKnK\x81KaK_K\x80KnKdK\x83K\ne."
+}
 
 
 def test_compress():

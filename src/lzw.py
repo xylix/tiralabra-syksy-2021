@@ -102,28 +102,44 @@ def decompress(raw_data: bytes) -> bytes:
     input_data: list[int] = pickle.loads(raw_data)
 
     def translate(code: int) -> str:
-        logging.debug(f"translating code {code}, length of dict: {len(dictionary)}")
-
-        return list(dictionary.items())[code][0]
+        # logging.debug(f"translating code {code}, length of dict: {len(dictionary)}")
+        return reverse_dict[code]
 
     output: list[str] = []
     dictionary = START_DICT.copy()
+    reverse_dict: dict[int, str] = {value: key for (key, value) in dictionary.items()}
     # Handle the first entry separately
     prevcode = input_data[0]
     output.append(translate(prevcode))
+
+    # Operations per second related code
+    last_i = 0
+    last_print = 0
     for i, currcode in enumerate(input_data[1:]):
-        logging.debug(f"currcode at index {i}: {currcode}")
-        if not currcode < len(dictionary):
-            print("PROBLEM SITUATION")
-        entry = translate(currcode)
-        logging.debug(f"currcode's decoded value: {repr(entry)}")
+        if time() - last_print >= 0.5:
+            logging.debug(f"operations per second: {i - last_i}")
+            logging.debug(f"progress: {i / len(input_data)}")
+            last_print = time()
+            last_i = i
+
+        if currcode < len(dictionary):
+            entry = translate(currcode)
+        else:
+            # An sCsCs form was encountered, and we need to infer the entry
+            # This is an oddity caused by the fact that the decoders dict is
+            # always one symbol behind the encoders dict.
+            x = translate(prevcode)
+            entry = x + x[0]
+
+        # logging.debug(f"currcode's decoded value: {repr(entry)}")
         output.append(entry)
         ch = entry[0]
         if len(dictionary) < MAX_DICT:
+            reverse_dict[len(dictionary)] = translate(prevcode) + ch
             dictionary[translate(prevcode) + ch] = len(dictionary)
-        logging.debug(
-            f"added translation {repr(translate(prevcode) + ch)}: {len(dictionary)}"
-        )
+        # logging.debug(
+        #     f"added translation {repr(translate(prevcode) + ch)}: {len(dictionary)}"
+        # )
         prevcode = currcode
 
     return bytes("".join(output), encoding="ascii")

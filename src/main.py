@@ -63,11 +63,19 @@ def main(
     def compress(input_data: bytes):
         output = module.compress(input_data)
         outf_name = f"{filename}.{algo.value}"
+        print(
+            f"Compressed {len(input_data)} bytes to {len(output)} bytes, ratio: { len(output) / len(input_data) }"
+        )
+
         return output, outf_name
 
     def decompress(input_data: bytes):
         output = module.decompress(input_data)
         outf_name = f"{filename}.out"
+
+        print(
+            f"Decompressed {len(input_data)} bytes to {len(output)} bytes, ratio: { len(output) / len(input_data) }"
+        )
         return output, outf_name
 
     infile = Path(filename)
@@ -112,9 +120,6 @@ def main(
         print(f"Created output: `{output}`")
     elif not write_to_file:
         print("Output quite long to print, please use --write-to-file")
-    print(
-        f"Compressed {len(input_data)} bytes to {len(output)} bytes, ratio: { len(output) / len(input_data) }"
-    )
 
 
 if __name__ == "__main__":
