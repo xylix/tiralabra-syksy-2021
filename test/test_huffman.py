@@ -17,13 +17,6 @@ TEST_DATA = {
 TEST_LIPSUMFILE = "test_lipsum_10_paragraphs.txt"
 
 
-@pytest.fixture
-def lipsum_string() -> str:
-    with open(Path(__file__).parent / TEST_LIPSUMFILE) as f:
-        data = f.read()
-    return data
-
-
 def test_preprocess():
     for cleartext, encoded in TEST_DATA.items():
         out = huffman.preprocess(cleartext)
@@ -53,9 +46,11 @@ def test_longer_input_file():
 @pytest.mark.slow
 def test_benchmark_huffman_compression(lipsum_string, benchmark):
     compressed = benchmark(huffman.compress, lipsum_string)
+    assert compressed
 
 
 @pytest.mark.slow
 def test_benchmark_huffman_decompression(lipsum_string, benchmark):
     compressed = huffman.compress(lipsum_string)
     decompressed = benchmark(huffman.decompress, compressed)
+    assert decompressed

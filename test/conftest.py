@@ -41,7 +41,7 @@ def temp_dir() -> Iterator[Path]:
 
 
 @pytest.fixture
-def lipsum_string() -> str:
-    with open(Path(__file__).parent / TEST_LIPSUMFILE) as f:
+def lipsum_string() -> bytes:
+    with open(Path(__file__).parent / TEST_LIPSUMFILE, "rb") as f:
         data = f.read()
     return data
