@@ -3,7 +3,6 @@ from heapq import heappop, heappush
 import logging
 import pickle
 from typing import Dict, Iterable, List, Optional, Tuple
-from sys import getsizeof
 
 from src.utils import visualize_tree
 
@@ -124,7 +123,6 @@ def compress(data: bytes) -> bytes:
         output += encoded_char
     encoded_output = int(output, base=2)
 
-    logging.debug(f"Compression ratio: { getsizeof(output) / getsizeof(data) }")
     return pickle.dumps(HuffmanResult(encoded_output, c))
 
 

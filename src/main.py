@@ -2,8 +2,8 @@ from enum import Enum
 from io import UnsupportedOperation
 import logging
 from pathlib import Path
-import pickle
 import sys
+from sys import getsizeof
 
 import typer
 
@@ -30,7 +30,7 @@ class Operation(Enum):
 def main(
     filename: str,
     operation: Operation = "auto",  # type: ignore
-    debug: bool = True,
+    debug: bool = False,
     write_to_file: bool = False,
     algo: Algorithm = "huffman",  # type: ignore
 ):
@@ -60,25 +60,26 @@ def main(
     ):
         raise UnsupportedOperation("Do not archive already archived files")
 
-    def compress():
-        with open(filename, "rb") as file:
-            output = module.compress(file.read())
-            outf_name = f"{filename}.{algo.value}"
+    def compress(input_data: bytes):
+        output = module.compress(input_data)
+        outf_name = f"{filename}.{algo.value}"
         return output, outf_name
 
-    def decompress():
-        with open(filename, "rb") as file:
-            output = module.decompress(file.read())
-            outf_name = f"{filename}.out"
+    def decompress(input_data: bytes):
+        output = module.decompress(input_data)
+        outf_name = f"{filename}.out"
         return output, outf_name
 
     infile = Path(filename)
+
+    with open(infile, "rb") as file:
+        input_data = file.read()
     if operation == operation.archive:
         assert infile.suffix in FILETYPES_TO_ARCHIVE
-        output, outf_name = compress()
+        output, outf_name = compress(input_data)
     elif operation == operation.extract:
         assert infile.suffix in SUPPORTED_ARCHIVES
-        output, outf_name = decompress()
+        output, outf_name = decompress(input_data)
     elif operation == operation.auto:
         logging.debug(f"Suffix: `{infile.suffix}`")
 
@@ -88,10 +89,10 @@ def main(
             module = huffman
         output: bytes
         if infile.suffix in SUPPORTED_ARCHIVES:
-            output, outf_name = decompress()
+            output, outf_name = decompress(input_data)
         # TODO: add more supported input types
         elif infile.suffix in FILETYPES_TO_ARCHIVE:
-            output, outf_name = compress()
+            output, outf_name = compress(input_data)
         else:
             raise ValueError(
                 f"Cannot figure out automatic operation type from {filename}"
@@ -108,6 +109,9 @@ def main(
             # outf.write(bytes(output)
             outf.write(output)
     logging.debug(f"Created output: `{output}`")
+    print(
+        f"Compressed {len(input_data)} bytes to {len(output)} bytes, ratio: { len(output) / len(input_data) }"
+    )
 
 
 if __name__ == "__main__":
