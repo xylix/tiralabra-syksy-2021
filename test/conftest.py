@@ -8,6 +8,9 @@ from typing import Iterator
 import pytest
 
 
+RESOURCES = Path(__file__).parent / "resources"
+
+
 def pytest_addoption(parser):
     parser.addoption(
         "--runslow", action="store_true", default=False, help="run slow tests"
@@ -31,10 +34,16 @@ def pytest_collection_modifyitems(config, items):
 @pytest.fixture
 def temp_dir() -> Iterator[Path]:
     with tempfile.TemporaryDirectory() as dirname:
-        copyfile(Path(__file__).parent / TEST_INFILE, Path(dirname) / TEST_INFILE)
-        copyfile(Path(__file__).parent / TEST_OUTFILE, Path(dirname) / TEST_OUTFILE)
         copyfile(
-            Path(__file__).parent / TEST_LIPSUMFILE,
+            RESOURCES / TEST_INFILE,
+            Path(dirname) / TEST_INFILE,
+        )
+        copyfile(
+            RESOURCES / TEST_OUTFILE,
+            Path(dirname) / TEST_OUTFILE,
+        )
+        copyfile(
+            RESOURCES / TEST_LIPSUMFILE,
             Path(dirname) / "test_lipsum_10_paragraphs.txt",
         )
         yield Path(dirname)
@@ -42,6 +51,6 @@ def temp_dir() -> Iterator[Path]:
 
 @pytest.fixture
 def lipsum_string() -> bytes:
-    with open(Path(__file__).parent / TEST_LIPSUMFILE, "rb") as f:
+    with open(RESOURCES / TEST_LIPSUMFILE, "rb") as f:
         data = f.read()
     return data

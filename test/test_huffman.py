@@ -33,12 +33,10 @@ def test_decompress():
         assert out == cleartext
 
 
-def test_longer_input_file():
-    with open(Path(__file__).parent / TEST_LIPSUMFILE, "rb") as f:
-        data = f.read()
-    compressed = huffman.compress(data)
+def test_longer_input_file(lipsum_string):
+    compressed = huffman.compress(lipsum_string)
     decompressed = huffman.decompress(compressed)
-    assert data == decompressed
+    assert lipsum_string == decompressed
 
 
 @pytest.mark.slow
