@@ -21,22 +21,27 @@ def test_decompress():
         assert out == cleartext
 
 
-def test_compress_decompress_should_negate(temp_dir):
-    with open(temp_dir / TEST_LIPSUMFILE, "rb") as f:
-        data = f.read()
-    compressed = lzw.compress(data)
+def test_compress_decompress_should_negate(lipsum):
+    compressed = lzw.compress(lipsum)
     decompressed = lzw.decompress(compressed)
-    assert data == decompressed
+    assert lipsum == decompressed
+
+
+@pytest.mark.skip("This is currently too slow to run")
+def test_holmes(holmes):
+    compressed = lzw.compress(holmes)
+    decompressed = lzw.decompress(compressed)
+    assert holmes == decompressed
 
 
 @pytest.mark.slow
-def test_benchmark_lzw_compression(lipsum_string, benchmark):
-    compressed = benchmark(lzw.compress, lipsum_string)
+def test_benchmark_lzw_compression(lipsum, benchmark):
+    compressed = benchmark(lzw.compress, lipsum)
     assert compressed
 
 
 @pytest.mark.slow
-def test_benchmark_lzw_decompression(lipsum_string, benchmark):
-    compressed = lzw.compress(lipsum_string)
+def test_benchmark_lzw_decompression(lipsum, benchmark):
+    compressed = lzw.compress(lipsum)
     decompressed = benchmark(lzw.decompress, compressed)
     assert decompressed
