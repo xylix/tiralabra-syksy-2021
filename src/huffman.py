@@ -46,7 +46,23 @@ class HuffmanResult:
     """
 
     encoded: int
-    bintree: Node
+    freq_dict: Dict[int, int]
+
+
+def create_huffman_tree(c: Dict[int, int]) -> List[Node]:
+    q: List[Node] = []
+    for symbol, freq in c.items():
+        node = Node(freq, symbol)
+        logging.debug(f"node: {node}")
+        heappush(q, node)
+    while len(q) > 1:
+        left = heappop(q)
+        right = heappop(q)
+        freq = left.freq + right.freq
+        z = Node(freq, None, left, right)
+        heappush(q, z)
+    assert len(q) == 1
+    return q
 
 
 def transform_bintree(root) -> Dict[int, str]:
@@ -93,18 +109,7 @@ def compress(data: bytes) -> bytes:
     Return Q
     """
     c = preprocess(data)
-    q: List[Node] = []
-    for symbol, freq in c.items():
-        node = Node(freq, symbol)
-        logging.debug(f"node: {node}")
-        heappush(q, node)
-    while len(q) > 1:
-        left = heappop(q)
-        right = heappop(q)
-        freq = left.freq + right.freq
-        z = Node(freq, None, left, right)
-        heappush(q, z)
-
+    q = create_huffman_tree(c)
     # logging.debug(q[0])
     # logging.debug(visualize_tree.print_tree(q[0]))
     # Transform the binary tree to a dictionary
@@ -120,7 +125,7 @@ def compress(data: bytes) -> bytes:
     encoded_output = int(output, base=2)
 
     logging.debug(f"Compression ratio: { getsizeof(output) / getsizeof(data) }")
-    return pickle.dumps(HuffmanResult(encoded_output, q[0]))
+    return pickle.dumps(HuffmanResult(encoded_output, c))
 
 
 def decompress(raw_data: bytes) -> bytes:
@@ -151,7 +156,7 @@ def decompress(raw_data: bytes) -> bytes:
     encoded = input_data.encoded
     S = bin(encoded)[2:]
 
-    root = input_data.bintree
+    root = create_huffman_tree(input_data.freq_dict)[0]
     output = ""
     n = len(S)
     print(n)
