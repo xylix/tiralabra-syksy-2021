@@ -87,25 +87,27 @@ def decompress(raw_data: bytes) -> bytes:
 
     """
 
-    # TODO: just use the binary data herre
-    input_data: str = pickle.loads(raw_data)
+    # TODO: just use the binary data here
+    # input_data: str = pickle.loads(raw_data)
 
     def translate(code: int) -> str:
         return list(dictionary.keys())[int(code)]
 
     output: list[str] = []
     dictionary = START_DICT.copy()
-    splat = input_data.split(",")
     # Handle the first entry separately
-    prevcode = int(splat[0])
+    prevcode = int(raw_data[0])
     output.append(translate(prevcode))
-    for i, currcode in enumerate(splat[1:]):
+    for i, currcode in enumerate(raw_data[1:]):
         logging.debug(f"currcode at index {i}: {currcode}")
         entry = translate(int(currcode))
         logging.debug(f"currcode's decoded value: {repr(entry)}")
         output.append(entry)
         ch = entry[0]
-        dictionary[translate(prevcode) + ch] = number_to_binary(len(dictionary.items()))
+        if len(dictionary) < 256:
+            dictionary[translate(prevcode) + ch] = number_to_binary(
+                len(dictionary.items())
+            )
         logging.debug(
             f"added translation {translate(prevcode) + ch}: {len(dictionary.items())}"
         )
