@@ -14,8 +14,13 @@ Compress `filename` with Huffman coding: `python -m src.main filename --operatio
 Extract `filename` (that has either .lzw or .huffman extension) : `python -m src.main filename --operation extract `
 
 
+
+## Development
+
 Run tests: `make test` 
 Run performance tests: `make test-with-benchmarks`
+
+Run with `python -m cProfile -o profile.out -s cumtime -m src.main` to profile
 
 
 ## Course documents

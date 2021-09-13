@@ -1,5 +1,5 @@
 import logging
-import pickle
+from time import time
 from sys import getsizeof
 from typing import Dict
 
@@ -40,25 +40,34 @@ def compress(input_data: bytes) -> bytes:
     # TODO: actually handle taking in byte data
     data = str(input_data, encoding="utf-8")
 
-    output = bytes()
+    output = []
     dictionary = START_DICT.copy()
     s = ""
+    dict_full = False
 
+    last_i = 0
+    last_print = 0
     for i, ch in enumerate(data):
-        logging.debug(f"character at index {i}: {repr(ch)}")
-        logging.debug(f"s+ch ({repr(s+ch)}) in dict: {dictionary.get(s+ch)}")
+        if time() - last_print >= 0.5:
+            logging.debug(f"operations per second: {i - last_i}")
+            logging.debug(f"progress: {i / len(data)}")
+            last_print = time()
+            last_i = i
+        # logging.debug(f"character at index {i}: {repr(ch)}")
+        # logging.debug(f"s+ch ({repr(s+ch)}) in dict: {dictionary.get(s+ch)}")
 
         if s + ch in dictionary:
             s = s + ch
         else:
-            output += dictionary[s]
-            if len(dictionary) < 256:
+            output.append(dictionary[s])
+            if not dict_full and len(dictionary) < 256:
                 dictionary[s + ch] = number_to_binary(len(dictionary))
+                dict_full = True
             s = ch
-    output += dictionary[s]
+    output.append(dictionary[s])
     logging.debug(f"dict: {dictionary}")
     logging.debug(f"Compression ratio: { getsizeof(output) / getsizeof(input_data) }")
-    return output
+    return b"".join(output)
 
 
 def decompress(raw_data: bytes) -> bytes:
