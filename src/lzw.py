@@ -2,11 +2,13 @@ import logging
 from time import time
 from sys import getsizeof
 from typing import Dict
+import pickle
 
 from src.utils.binary import number_to_binary
 
 
-START_DICT: Dict[str, bytes] = {chr(i): number_to_binary(i) for i in range(128)}
+START_DICT: Dict[str, int] = {chr(i): i for i in range(128)}
+MAX_DICT = 16000
 
 
 def compress(input_data: bytes) -> bytes:
@@ -40,11 +42,11 @@ def compress(input_data: bytes) -> bytes:
     # TODO: actually handle taking in byte data
     data = str(input_data, encoding="utf-8")
 
-    output = []
+    output: list[int] = []
     dictionary = START_DICT.copy()
     s = ""
-    dict_full = False
 
+    # Operations per second related code
     last_i = 0
     last_print = 0
     for i, ch in enumerate(data):
@@ -56,18 +58,18 @@ def compress(input_data: bytes) -> bytes:
         # logging.debug(f"character at index {i}: {repr(ch)}")
         # logging.debug(f"s+ch ({repr(s+ch)}) in dict: {dictionary.get(s+ch)}")
 
+        # Possible future optimization: reset dict after n misses in a row (could be a tell that the data has different sections)
         if s + ch in dictionary:
             s = s + ch
         else:
             output.append(dictionary[s])
-            if not dict_full and len(dictionary) < 256:
-                dictionary[s + ch] = number_to_binary(len(dictionary))
-                dict_full = True
+            # If we are encoding as python integers, the only limit could be how big of a dict can fit into ram
+            if len(dictionary) < MAX_DICT:
+                dictionary[s + ch] = len(dictionary)
             s = ch
     output.append(dictionary[s])
     logging.debug(f"dict: {dictionary}")
-    logging.debug(f"Compression ratio: { getsizeof(output) / getsizeof(input_data) }")
-    return b"".join(output)
+    return pickle.dumps(output)
 
 
 def decompress(raw_data: bytes) -> bytes:
@@ -97,29 +99,31 @@ def decompress(raw_data: bytes) -> bytes:
     """
 
     # TODO: just use the binary data here
-    # input_data: str = pickle.loads(raw_data)
+    input_data: list[int] = pickle.loads(raw_data)
 
     def translate(code: int) -> str:
-        return list(dictionary.keys())[int(code)]
+        logging.debug(f"translating code {code}, length of dict: {len(dictionary)}")
+
+        return list(dictionary.items())[code][0]
 
     output: list[str] = []
     dictionary = START_DICT.copy()
     # Handle the first entry separately
-    prevcode = int(raw_data[0])
+    prevcode = input_data[0]
     output.append(translate(prevcode))
-    for i, currcode in enumerate(raw_data[1:]):
+    for i, currcode in enumerate(input_data[1:]):
         logging.debug(f"currcode at index {i}: {currcode}")
-        entry = translate(int(currcode))
+        if not currcode < len(dictionary):
+            print("PROBLEM SITUATION")
+        entry = translate(currcode)
         logging.debug(f"currcode's decoded value: {repr(entry)}")
         output.append(entry)
         ch = entry[0]
-        if len(dictionary) < 256:
-            dictionary[translate(prevcode) + ch] = number_to_binary(
-                len(dictionary.items())
-            )
+        if len(dictionary) < MAX_DICT:
+            dictionary[translate(prevcode) + ch] = len(dictionary)
         logging.debug(
-            f"added translation {translate(prevcode) + ch}: {len(dictionary.items())}"
+            f"added translation {repr(translate(prevcode) + ch)}: {len(dictionary)}"
         )
-        prevcode = int(currcode)
+        prevcode = currcode
 
     return bytes("".join(output), encoding="ascii")

@@ -109,7 +109,9 @@ def main(
             # outf.write(bytes(output)
             outf.write(output)
     if len(output) < 16000:
-        logging.debug(f"Created output: `{output}`")
+        print(f"Created output: `{output}`")
+    elif not write_to_file:
+        print("Output quite long to print, please use --write-to-file")
     print(
         f"Compressed {len(input_data)} bytes to {len(output)} bytes, ratio: { len(output) / len(input_data) }"
     )
