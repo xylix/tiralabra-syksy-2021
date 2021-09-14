@@ -19,8 +19,10 @@
 
 - LZW:
     - TODO: present o-analysis
+    - TODO: present hypothesis / theoretical compression efficiency
 - Huffman:
     - TODO: present o-analysis
+    - TODO: present hypothesis / theoretical compression efficiency
     
 
 How the project implementation deviates from the "specification":
@@ -68,9 +70,15 @@ Both algorithms time complexities should also be affected by the amount of symbo
 - LZW can quite simply be optimized by utilizing "clear codes" when the dict seems to have lots of not-useful data encoded at the smaller indices. This would improve performance on data which varies a lot.
 
 ## Sources:
-- LZW:
-    - 
-- Huffman:
-    - 
-- visualize_tree.py: Original version from https://stackoverflow.com/a/65865825
+* LZ
+  * https://en.wikipedia.org/wiki/LZ77_and_LZ78#LZ78
+  * LZW https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Welch
+  * LZW pseudocode: https://www2.cs.duke.edu/csed/curious/compression/lzw.html
+
+* Huffman coding
+  * https://en.wikipedia.org/wiki/Huffman_coding
+  * Pseudocode: https://riptutorial.com/algorithm/example/23995/huffman-coding
+  * Compression efficiency target https://en.wikipedia.org/wiki/Arithmetic_coding#Huffman_coding
+
+*  visualize_tree.py: Original version from https://stackoverflow.com/a/65865825
 
