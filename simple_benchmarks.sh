@@ -1,6 +1,5 @@
 #!/bin/sh
 
-
 echo "## LZW 100kb_lipsum.txt"
 time python -m src.main --algo huffman test/resources/100kb_lipsum.txt --write-to-file
 time python -m src.main --algo huffman test/resources/100kb_lipsum.txt.huffman --write-to-file
@@ -27,12 +26,10 @@ time python -m src.main --algo lzw test/resources/holmes.txt.lzw --write-to-file
 
 echo "cleanup"
 
-rm test/resources/100kb_lipsum.txt \
-test/resources/100kb_lipsum.txt.huffman \
+rm test/resources/100kb_lipsum.txt.huffman \
 test/resources/100kb_lipsum.txt.huffman.out \
 test/resources/100kb_lipsum.txt.lzw \
 test/resources/100kb_lipsum.txt.lzw.out \
-test/resources/6_2mb_lipsum.txt \
 test/resources/6_2mb_lipsum.txt.huffman \
 test/resources/6_2mb_lipsum.txt.huffman.out \
 test/resources/6_2mb_lipsum.txt.lzw \

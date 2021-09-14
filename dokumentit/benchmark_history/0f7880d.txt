@@ -1,0 +1,70 @@
+## LZW 100kb_lipsum.txt
+Compressed 100625 bytes to 54164 bytes, ratio: 0.5382757763975156
+
+real	0m0.093s
+user	0m0.073s
+sys	0m0.016s
+430649
+Decompressed 54164 bytes to 100634 bytes, ratio: 1.8579499298427
+
+real	0m0.155s
+user	0m0.137s
+sys	0m0.015s
+## Huffman 100kb_lipsum.txt
+Compressed 100625 bytes to 53392 bytes, ratio: 0.5306037267080745
+
+real	0m0.102s
+user	0m0.086s
+sys	0m0.013s
+Decompressed 53392 bytes to 100625 bytes, ratio: 1.8846456397962241
+
+real	0m0.092s
+user	0m0.074s
+sys	0m0.015s
+## LZW 6_2mb_lipsum.txt
+Compressed 6488164 bytes to 3471217 bytes, ratio: 0.5350075922865082
+
+real	0m1.538s
+user	0m1.495s
+sys	0m0.036s
+27766543
+Decompressed 3471217 bytes to 6488172 bytes, ratio: 1.869134657960018
+
+real	0m5.492s
+user	0m5.425s
+sys	0m0.059s
+## Huffman 6_2mb_lipsum.txt
+Compressed 6488164 bytes to 2884487 bytes, ratio: 0.4445767708707733
+
+real	0m2.174s
+user	0m2.138s
+sys	0m0.031s
+Decompressed 2884487 bytes to 6488164 bytes, ratio: 2.2493302968604123
+
+real	0m0.649s
+user	0m0.591s
+sys	0m0.047s
+## LZW holmes.txt
+Compressed 6488666 bytes to 3683682 bytes, ratio: 0.567710219635284
+
+real	0m1.630s
+user	0m1.588s
+sys	0m0.038s
+29464731
+Decompressed 3683682 bytes to 6488666 bytes, ratio: 1.7614620371682463
+
+real	0m5.671s
+user	0m5.603s
+sys	0m0.059s
+## Huffman holmes.txt
+Compressed 6488666 bytes to 5185045 bytes, ratio: 0.7990926023931575
+
+real	0m2.260s
+user	0m2.220s
+sys	0m0.033s
+Decompressed 5185045 bytes to 6488666 bytes, ratio: 1.2514194187321421
+
+real	0m1.141s
+user	0m1.080s
+sys	0m0.055s
+cleanup

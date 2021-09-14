@@ -10,6 +10,8 @@ test:
 	python -m pytest
 test-with-benchmarks:
 	python -m pytest --runslow
+simple-benchmarks:
+	fish -c 'simple_benchmarks.sh &> dokumentit/benchmark_history/(git rev-parse --short HEAD).txt'
 format:
 	black src
 	black test
