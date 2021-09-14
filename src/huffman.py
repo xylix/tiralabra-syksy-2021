@@ -9,13 +9,13 @@ ALGORITHM_NAME = "huffman"
 
 def create_freq_dict(data: bytes) -> Dict[int, int]:
     """Generate character frequency dictionary from input_data data."""
-    chardict: Dict[int, int] = {}
+    bytedict: Dict[int, int] = {}
     for char in data:
-        if char in chardict:
-            chardict[char] += 1
+        if char in bytedict:
+            bytedict[char] += 1
         else:
-            chardict[char] = 1
-    return chardict
+            bytedict[char] = 1
+    return bytedict
 
 
 @dataclass
@@ -156,15 +156,17 @@ def decompress(raw_data: bytes) -> bytes:
     endfor
     """
     input_data: HuffmanResult = pickle.loads(raw_data)
-    logging.debug(input_data)
+    # Printing pickled data can sometimes freeze the entire program or the terminal
+    # logging.debug(input_data)
+
     # Can't use handy dict for decompression because the tree also encodes the information of at what point which symbol terminates
     encoded = input_data.encoded
     S = bin(encoded)[2:]
 
     root = create_huffman_tree(input_data.freq_dict)
-    output = ""
+    output: bytearray = bytearray()
     n = len(S)
-    print(n)
+    logging.debug(f"input data size: {n}")
     # While instead of for because it's easier to skip entries with this than with Python's for
     i = 0
     while i < n:
@@ -177,6 +179,6 @@ def decompress(raw_data: bytes) -> bytes:
                 current = current.right
             i = i + 1
         # The terminal nodes should always have a symbol
-        assert current.symbol
-        output += chr(current.symbol)
-    return bytes("".join(output), encoding="ascii")
+        assert isinstance(current.symbol, int)
+        output.append(current.symbol)
+    return output

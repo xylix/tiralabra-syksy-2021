@@ -10,7 +10,7 @@ from . import lzw
 from . import huffman
 
 
-SUPPORTED_ARCHIVES = [".lzw", ".huffman"]
+SUPPORTED_ARCHIVES = [".lzw", ".huffman", ".lzhuff"]
 # TODO: add more supported input types, specifically UTF-8
 FILETYPES_TO_ARCHIVE = [".txt"]
 
@@ -40,12 +40,15 @@ def _determine_module_from_suffix(suffix: str):
         return lzw
     elif suffix == ".huffman":
         return huffman
+    elif suffix == ".zhuff":
+        return Algorithm.COMBO
     else:
         return None
 
 
 def _decompress(module, filename, input_data: bytes) -> Tuple[bytes, str]:
     if module == Algorithm.COMBO:
+        logging.debug("Decompressing combo archive.")
         output = lzw.decompress(huffman.decompress(input_data))
         outf_name = f"{filename}.out"
     else:
@@ -61,7 +64,7 @@ def _decompress(module, filename, input_data: bytes) -> Tuple[bytes, str]:
 def _compress(module, filename: str, input_data: bytes):
     if module == Algorithm.COMBO:
         output = huffman.compress(lzw.compress(input_data))
-        outf_name = f"{filename}.lzw.huffman"
+        outf_name = f"{filename}.lzhuff"
     else:
         output = module.compress(input_data)
         outf_name = f"{filename}.{module.ALGORITHM_NAME}"
@@ -73,7 +76,7 @@ def _compress(module, filename: str, input_data: bytes):
     return output, outf_name
 
 
-def _auto_operate(algo, filename: str) -> Tuple[bytes, str]:
+def _auto_operate(algo: Algorithm, filename: str) -> Tuple[bytes, str]:
     infile = Path(filename)
     # If we are using operation.AUTO we override from the parameter,
     # IF the infile has a suffix that corresponds to an algorithm
@@ -84,6 +87,7 @@ def _auto_operate(algo, filename: str) -> Tuple[bytes, str]:
     logging.debug(f"Suffix: `{infile.suffix}`")
     with open(infile, "rb") as file:
         input_data = file.read()
+    logging.debug("File read.")
 
     if infile.suffix in SUPPORTED_ARCHIVES:
         return _decompress(module, filename, input_data)
