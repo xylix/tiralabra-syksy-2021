@@ -75,8 +75,9 @@ def _auto_operate(
 ) -> Tuple[bytes, str]:
     logging.debug(f"Suffix: `{infile.suffix}`")
 
-    # If we are using operation.AUTO we override from the parameter
-    module = _determine_module_from_suffix(infile.suffix)
+    # If we are using operation.AUTO we override from the parameter,
+    # IF the infile has a suffix that corresponds to an algorithm
+    module = _determine_module_from_suffix(infile.suffix) or module
 
     if infile.suffix in SUPPORTED_ARCHIVES:
         return _decompress(module, filename, input_data)
@@ -125,9 +126,11 @@ def main(
 
     if operation == operation.ARCHIVE:
         assert infile.suffix in FILETYPES_TO_ARCHIVE
+
         output, outf_name = _compress(module, filename, infile.suffix, input_data)
     elif operation == operation.EXTRACT:
         assert infile.suffix in SUPPORTED_ARCHIVES
+
         output, outf_name = _decompress(module, filename, input_data)
     elif operation == operation.AUTO:
         output, outf_name = _auto_operate(module, infile, input_data, filename)
@@ -137,6 +140,7 @@ def main(
         # maybe check https://docs.python.org/3/library/codecs.html
         with open(outf_name, "wb") as outf:
             outf.write(output)
+
     if len(output) < 16000:
         print(f"Created output: `{output}`")
     elif not write_to_file:
