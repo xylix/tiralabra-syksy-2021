@@ -1,7 +1,5 @@
 import pickle
 
-import pytest
-
 from src import huffman
 from src.huffman import HuffmanResult
 
