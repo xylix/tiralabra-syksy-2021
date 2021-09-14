@@ -4,8 +4,6 @@ import logging
 import pickle
 from typing import Dict, Iterable, List, Optional, Tuple
 
-# Pseudocode examples from https://riptutorial.com/algorithm/example/23995/huffman-coding
-
 
 def create_freq_dict(data: bytes) -> Dict[int, int]:
     """Generate character frequency dictionary from input_data data"""
@@ -46,6 +44,10 @@ class HuffmanResult:
 
 def create_huffman_tree(c: Dict[int, int]) -> Node:
     """
+    Create a huffman tree from the given frequency dict.
+
+    Implementation mostly matches below pseudocode from https://riptutorial.com/algorithm/example/23995/huffman-coding
+
     Procedure Huffman(C):     // C is the set of n characters and related information
     n = C.size
     Q = priority_queue()
@@ -103,6 +105,12 @@ def transform_bintree(root: Node) -> Dict[int, str]:
 
 
 def compress(data: bytes) -> bytes:
+    """
+    Compress data into huffman encoded binary.
+
+    Returns a pickle dump of the binary data and the frequency
+    dict used to encode, which is necessary for decoding.
+    """
     frequency_dict = create_freq_dict(data)
     root = create_huffman_tree(frequency_dict)
     # logging.debug(q[0])
@@ -125,6 +133,10 @@ def compress(data: bytes) -> bytes:
 def decompress(raw_data: bytes) -> bytes:
     # pylint: disable=invalid-name
     """
+    Decompress a huffman encoded data, requires the encoded data and the huffman tree as input
+
+    Implementation mostly matches below pseudocode from https://riptutorial.com/algorithm/example/23995/huffman-coding
+
 
     Procedure HuffmanDecompression(root, S):   // root represents the root of Huffman Tree
     n := S.length                              // S refers to bit-stream to be decompressed
@@ -140,9 +152,6 @@ def decompress(raw_data: bytes) -> bytes:
         endwhile
         print current.symbol
     endfor
-
-    Decompress a huffman encoded data, requires the encoded data and the huffman tree as input
-
     """
     input_data: HuffmanResult = pickle.loads(raw_data)
     logging.debug(input_data)

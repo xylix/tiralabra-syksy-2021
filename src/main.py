@@ -15,11 +15,14 @@ FILETYPES_TO_ARCHIVE = [".txt"]
 
 
 class Algorithm(Enum):
+    "Supported encoding and decoding algorithms."
     LZW = "lzw"
     HUFFMAN = "huffman"
 
 
 class Operation(Enum):
+    """Supported operations."""
+
     ARCHIVE = "archive"
     EXTRACT = "extract"
     AUTO = "auto"
