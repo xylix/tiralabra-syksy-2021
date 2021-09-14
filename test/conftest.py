@@ -5,7 +5,7 @@ from typing import Iterator
 
 import pytest
 
-from test.utils import TEST_INFILE, TEST_LIPSUMFILE, TEST_OUTFILE
+from test.utils import TEST_INFILE, TEST_LIPSUMFILE, TEST_OUTFILE_LZW
 
 RESOURCES = Path(__file__).parent / "resources"
 
@@ -38,8 +38,8 @@ def temp_dir() -> Iterator[Path]:
             Path(dirname) / TEST_INFILE,
         )
         copyfile(
-            RESOURCES / TEST_OUTFILE,
-            Path(dirname) / TEST_OUTFILE,
+            RESOURCES / TEST_OUTFILE_LZW,
+            Path(dirname) / TEST_OUTFILE_LZW,
         )
         copyfile(
             RESOURCES / TEST_LIPSUMFILE,

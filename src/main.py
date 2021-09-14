@@ -22,14 +22,6 @@ class Algorithm(Enum):
     HUFFMAN = "huffman"
 
 
-class Operation(Enum):
-    """Supported operations."""
-
-    ARCHIVE = "archive"
-    EXTRACT = "extract"
-    AUTO = "auto"
-
-
 def _determine_module_from_algo(algo: Algorithm):
     """ """
     if algo == Algorithm.LZW:
@@ -70,37 +62,29 @@ def _compress(module, filename: str, output_suffix: str, input_data: bytes):
     return output, outf_name
 
 
-def _auto_operate(
-    module, infile: Path, input_data: bytes, filename: str
-) -> Tuple[bytes, str]:
-    logging.debug(f"Suffix: `{infile.suffix}`")
-
+def _auto_operate(algo, filename: str) -> Tuple[bytes, str]:
+    infile = Path(filename)
     # If we are using operation.AUTO we override from the parameter,
     # IF the infile has a suffix that corresponds to an algorithm
-    module = _determine_module_from_suffix(infile.suffix) or module
+    module = _determine_module_from_suffix(
+        infile.suffix
+    ) or _determine_module_from_algo(algo)
+
+    logging.debug(f"Suffix: `{infile.suffix}`")
+    with open(infile, "rb") as file:
+        input_data = file.read()
 
     if infile.suffix in SUPPORTED_ARCHIVES:
         return _decompress(module, filename, input_data)
     elif infile.suffix in FILETYPES_TO_ARCHIVE:
         return _compress(module, filename, module.ALGORITHM_NAME, input_data)
     else:
-        raise ValueError(f"Cannot figure out automatic operation type from {filename}")
-
-
-def _validate_operation(operation: Operation, filename: str):
-    if operation not in Operation:
-        raise TypeError("Invalid operation")
-
-    if operation == operation.ARCHIVE and (
-        ".lzw" in filename or ".huffman" in filename
-    ):
-        raise UnsupportedOperation("Do not archive already archived files")
+        raise ValueError(f"Filetype of {filename} is not yet supported")
 
 
 # The type ignores for enum params are necessary because typer has problems with enum default values
 def main(
     filename: str,
-    operation: Operation = "auto",  # type: ignore
     debug: bool = False,
     write_to_file: bool = False,
     algo: Algorithm = "huffman",  # type: ignore
@@ -116,24 +100,7 @@ def main(
     logging.debug(f"Argument List: {sys.argv}")
     logging.debug(f"locals: {locals()}")
 
-    module = _determine_module_from_algo(algo)
-
-    _validate_operation(operation, filename)
-
-    infile = Path(filename)
-    with open(infile, "rb") as file:
-        input_data = file.read()
-
-    if operation == operation.ARCHIVE:
-        assert infile.suffix in FILETYPES_TO_ARCHIVE
-
-        output, outf_name = _compress(module, filename, infile.suffix, input_data)
-    elif operation == operation.EXTRACT:
-        assert infile.suffix in SUPPORTED_ARCHIVES
-
-        output, outf_name = _decompress(module, filename, input_data)
-    elif operation == operation.AUTO:
-        output, outf_name = _auto_operate(module, infile, input_data, filename)
+    output, outf_name = _auto_operate(algo, filename)
 
     if write_to_file:
         # TODO: figure out a more efficient storage format for the compressed output
