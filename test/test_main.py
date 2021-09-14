@@ -1,4 +1,3 @@
-from io import UnsupportedOperation
 import itertools
 
 import pytest
@@ -32,8 +31,8 @@ def test_permutations_of_main_args(temp_dir):
         str(temp_dir / TEST_OUTFILE_HUFFMAN),
     ]
 
-    l = [False, True]
-    bools = [list(i) for i in itertools.product(l, repeat=2)]
+    values_to_productize = [False, True]
+    bools = [list(i) for i in itertools.product(values_to_productize, repeat=2)]
     # We need the bools in reverse order so the configuration that writes to file is first
     bools.reverse()
     for permutation in bools:

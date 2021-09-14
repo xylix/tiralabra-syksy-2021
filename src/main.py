@@ -1,5 +1,4 @@
 from enum import Enum
-from io import UnsupportedOperation
 import logging
 from pathlib import Path
 import sys
