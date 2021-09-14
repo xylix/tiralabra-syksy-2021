@@ -4,10 +4,6 @@ import logging
 import pickle
 from typing import Dict, Iterable, List, Optional, Tuple
 
-from src.utils import visualize_tree
-
-from .utils.visualize_tree import print_tree
-
 # Pseudocode examples from https://riptutorial.com/algorithm/example/23995/huffman-coding
 
 
@@ -123,7 +119,7 @@ def compress(data: bytes) -> bytes:
         output += encoded_char
     encoded_output = int(output, base=2)
 
-    return pickle.dumps(HuffmanResult(encoded_output, c))
+    return pickle.dumps(HuffmanResult(encoded_output, c), protocol=4)
 
 
 def decompress(raw_data: bytes) -> bytes:

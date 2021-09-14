@@ -1,12 +1,11 @@
 from pathlib import Path
 from shutil import copyfile
 import tempfile
-from test.test_huffman import TEST_LIPSUMFILE
-from test.utils import TEST_INFILE, TEST_OUTFILE
 from typing import Iterator
 
 import pytest
 
+from test.utils import TEST_INFILE, TEST_LIPSUMFILE, TEST_OUTFILE
 
 RESOURCES = Path(__file__).parent / "resources"
 

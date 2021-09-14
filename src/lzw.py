@@ -1,10 +1,7 @@
 import logging
-from time import time
-from sys import getsizeof
-from typing import Dict
 import pickle
-
-from src.utils.binary import number_to_binary
+from time import time
+from typing import Dict, List
 
 
 START_DICT: Dict[str, int] = {chr(i): i for i in range(128)}
@@ -42,7 +39,7 @@ def compress(input_data: bytes) -> bytes:
     # TODO: actually handle taking in byte data
     data = str(input_data, encoding="utf-8")
 
-    output: list[int] = []
+    output: List[int] = []
     dictionary = START_DICT.copy()
     s = ""
 
@@ -70,7 +67,7 @@ def compress(input_data: bytes) -> bytes:
             s = ch
     output.append(dictionary[s])
     logging.debug(f"dict: {dictionary}")
-    return pickle.dumps(output)
+    return pickle.dumps(output, protocol=4)
 
 
 def decompress(raw_data: bytes) -> bytes:
@@ -100,15 +97,15 @@ def decompress(raw_data: bytes) -> bytes:
     """
 
     # TODO: just use the binary data here
-    input_data: list[int] = pickle.loads(raw_data)
+    input_data: List[int] = pickle.loads(raw_data)
 
     def translate(code: int) -> str:
         # logging.debug(f"translating code {code}, length of dict: {len(dictionary)}")
         return reverse_dict[code]
 
-    output: list[str] = []
+    output: List[str] = []
     dictionary = START_DICT.copy()
-    reverse_dict: dict[int, str] = {value: key for (key, value) in dictionary.items()}
+    reverse_dict: Dict[int, str] = {value: key for (key, value) in dictionary.items()}
     # Handle the first entry separately
     prevcode = input_data[0]
     output.append(translate(prevcode))

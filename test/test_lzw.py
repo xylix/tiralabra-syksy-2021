@@ -1,4 +1,3 @@
-from test.utils import TEST_LIPSUMFILE
 import pytest
 
 from src import lzw

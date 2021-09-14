@@ -3,7 +3,6 @@ from io import UnsupportedOperation
 import logging
 from pathlib import Path
 import sys
-from sys import getsizeof
 
 import typer
 

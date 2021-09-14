@@ -1,3 +1,5 @@
+from typing import List
+
 # pylint: disable-all
 # Original version from https://stackoverflow.com/a/65865825
 # Modified
@@ -5,7 +7,7 @@
 
 def print_tree(
     root, val="symbol", left="left", right="right"
-) -> list[str]:  # pragma: no cover
+) -> List[str]:  # pragma: no cover
     def val_to_string(node):
         value = getattr(node, val)
         if value:
