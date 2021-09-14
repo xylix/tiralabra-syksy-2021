@@ -30,7 +30,7 @@ class Operation(Enum):
     AUTO = "auto"
 
 
-def determine_module_from_algo(algo: Algorithm):
+def _determine_module_from_algo(algo: Algorithm):
     """ """
     if algo == Algorithm.LZW:
         return lzw
@@ -40,14 +40,17 @@ def determine_module_from_algo(algo: Algorithm):
         raise TypeError("Invalid algorithm specified")
 
 
-def determine_module_from_suffix(suffix: str):
+def _determine_module_from_suffix(suffix: str):
+    """Determine compression / decompression module to use from given suffix."""
     if suffix == ".lzw":
         return lzw
     elif suffix == ".huffman":
         return huffman
+    else:
+        return None
 
 
-def _decompress(module, filename, input_data: bytes):
+def _decompress(module, filename, input_data: bytes) -> Tuple[bytes, str]:
     output = module.decompress(input_data)
     outf_name = f"{filename}.out"
 
@@ -73,7 +76,7 @@ def _auto_operate(
     logging.debug(f"Suffix: `{infile.suffix}`")
 
     # If we are using operation.AUTO we override from the parameter
-    module = determine_module_from_suffix(infile.suffix)
+    module = _determine_module_from_suffix(infile.suffix)
 
     if infile.suffix in SUPPORTED_ARCHIVES:
         return _decompress(module, filename, input_data)
@@ -81,6 +84,16 @@ def _auto_operate(
         return _compress(module, filename, infile.suffix, input_data)
     else:
         raise ValueError(f"Cannot figure out automatic operation type from {filename}")
+
+
+def _validate_operation(operation: Operation, filename: str):
+    if operation not in Operation:
+        raise TypeError("Invalid operation")
+
+    if operation == operation.ARCHIVE and (
+        ".lzw" in filename or ".huffman" in filename
+    ):
+        raise UnsupportedOperation("Do not archive already archived files")
 
 
 # The type ignores for enum params are necessary because typer has problems with enum default values
@@ -102,18 +115,11 @@ def main(
     logging.debug(f"Argument List: {sys.argv}")
     logging.debug(f"locals: {locals()}")
 
-    module = determine_module_from_algo(algo)
+    module = _determine_module_from_algo(algo)
 
-    if operation not in Operation:
-        raise TypeError("Invalid operation")
-
-    if operation == operation.ARCHIVE and (
-        ".lzw" in filename or ".huffman" in filename
-    ):
-        raise UnsupportedOperation("Do not archive already archived files")
+    _validate_operation(operation, filename)
 
     infile = Path(filename)
-
     with open(infile, "rb") as file:
         input_data = file.read()
 
@@ -125,8 +131,6 @@ def main(
         output, outf_name = _decompress(module, filename, input_data)
     elif operation == operation.AUTO:
         output, outf_name = _auto_operate(module, infile, input_data, filename)
-    else:
-        raise UnsupportedOperation()
 
     if write_to_file:
         # TODO: figure out a more efficient storage format for the compressed output
