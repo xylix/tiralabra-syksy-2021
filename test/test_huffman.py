@@ -12,10 +12,10 @@ TEST_DATA = {
 # fmt: on
 
 
-def test_preprocess():
-    for cleartext, encoded in TEST_DATA.items():
-        out = huffman.preprocess(cleartext)
-        assert out
+def test_freq_dict():
+    for cleartext, expected_output in TEST_DATA.items():
+        out = huffman.create_freq_dict(cleartext)
+        assert out == expected_output.freq_dict
 
 
 def test_compress():

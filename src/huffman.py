@@ -7,7 +7,7 @@ from typing import Dict, Iterable, List, Optional, Tuple
 # Pseudocode examples from https://riptutorial.com/algorithm/example/23995/huffman-coding
 
 
-def preprocess(data: bytes) -> Dict[int, int]:
+def create_freq_dict(data: bytes) -> Dict[int, int]:
     """Generate character frequency dictionary from input_data data"""
     chardict: Dict[int, int] = {}
     for char in data:
@@ -44,7 +44,7 @@ class HuffmanResult:
     freq_dict: Dict[int, int]
 
 
-def create_huffman_tree(c: Dict[int, int]) -> List[Node]:
+def create_huffman_tree(c: Dict[int, int]) -> Node:
     """
     Procedure Huffman(C):     // C is the set of n characters and related information
     n = C.size
@@ -75,10 +75,10 @@ def create_huffman_tree(c: Dict[int, int]) -> List[Node]:
         z = Node(freq, None, left, right)
         heappush(q, z)
     assert len(q) == 1
-    return q
+    return q[0]
 
 
-def transform_bintree(root) -> Dict[int, str]:
+def transform_bintree(root: Node) -> Dict[int, str]:
     """
     Transforms the binary tree starting from `root` into a dictionary where dict[symbol]
     contains the path to the node encoded as a binary string.
@@ -103,12 +103,12 @@ def transform_bintree(root) -> Dict[int, str]:
 
 
 def compress(data: bytes) -> bytes:
-    c = preprocess(data)
-    q = create_huffman_tree(c)
+    frequency_dict = create_freq_dict(data)
+    root = create_huffman_tree(frequency_dict)
     # logging.debug(q[0])
     # logging.debug(visualize_tree.print_tree(q[0]))
     # Transform the binary tree to a dictionary
-    encoding_dict = transform_bintree(q[0])
+    encoding_dict = transform_bintree(root)
     logging.debug(encoding_dict)
 
     # Use the created binary tree to encode the data. Could not find a pseudo code for this, might need to create one.
@@ -119,7 +119,7 @@ def compress(data: bytes) -> bytes:
         output += encoded_char
     encoded_output = int(output, base=2)
 
-    return pickle.dumps(HuffmanResult(encoded_output, c), protocol=4)
+    return pickle.dumps(HuffmanResult(encoded_output, frequency_dict), protocol=4)
 
 
 def decompress(raw_data: bytes) -> bytes:
@@ -150,7 +150,7 @@ def decompress(raw_data: bytes) -> bytes:
     encoded = input_data.encoded
     S = bin(encoded)[2:]
 
-    root = create_huffman_tree(input_data.freq_dict)[0]
+    root = create_huffman_tree(input_data.freq_dict)
     output = ""
     n = len(S)
     print(n)
