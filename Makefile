@@ -14,6 +14,6 @@ format:
 	black src
 	black test
 lint:
-	pylint src
-	pylint test
+	pylint --fail-under=9 src
+	pylint --fail-under=9 --disable=missing-function-docstring test
 codestyle: format lint
