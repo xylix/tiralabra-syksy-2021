@@ -1,6 +1,6 @@
 [MESSAGES CONTROL]
 
-disable=bad-continuation,bad-whitespace,logging-fstring-interpolation,line-too-long,logging-not-lazy,missing-module-docstring
+disable=bad-continuation,bad-whitespace,logging-fstring-interpolation,line-too-long,logging-not-lazy,missing-module-docstring,no-else-return
 
 [format]
 

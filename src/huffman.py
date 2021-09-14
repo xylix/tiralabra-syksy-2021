@@ -6,7 +6,7 @@ from typing import Dict, Iterable, List, Optional, Tuple
 
 
 def create_freq_dict(data: bytes) -> Dict[int, int]:
-    """Generate character frequency dictionary from input_data data"""
+    """Generate character frequency dictionary from input_data data."""
     chardict: Dict[int, int] = {}
     for char in data:
         if char in chardict:
