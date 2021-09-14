@@ -9,7 +9,7 @@ coverage-file: coverage-generate
 test:
 	python -m pytest
 test-with-benchmarks:
-	python -m pytest --runslow
+	python -m pytest --runslow --capture=tee-sys
 simple-benchmarks:
 	fish -c 'simple_benchmarks.sh &> dokumentit/benchmark_history/(git rev-parse --short HEAD).txt'
 format:

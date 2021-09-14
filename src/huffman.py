@@ -181,4 +181,4 @@ def decompress(raw_data: bytes) -> bytes:
         # The terminal nodes should always have a symbol
         assert isinstance(current.symbol, int)
         output.append(current.symbol)
-    return output
+    return bytes(output)

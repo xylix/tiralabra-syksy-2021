@@ -26,23 +26,3 @@ def test_compress_decompress_should_negate(lipsum):
     compressed = lzw.compress(lipsum)
     decompressed = lzw.decompress(compressed)
     assert lipsum == decompressed
-
-
-@pytest.mark.skip("This is currently too slow to run")
-def test_holmes(holmes):
-    compressed = lzw.compress(holmes)
-    decompressed = lzw.decompress(compressed)
-    assert holmes == decompressed
-
-
-@pytest.mark.slow
-def test_benchmark_lzw_compression(lipsum, benchmark):
-    compressed = benchmark(lzw.compress, lipsum)
-    assert compressed
-
-
-@pytest.mark.slow
-def test_benchmark_lzw_decompression(lipsum, benchmark):
-    compressed = lzw.compress(lipsum)
-    decompressed = benchmark(lzw.decompress, compressed)
-    assert decompressed

@@ -34,23 +34,3 @@ def test_longer_input_file(lipsum):
     compressed = huffman.compress(lipsum)
     decompressed = huffman.decompress(compressed)
     assert lipsum == decompressed
-
-
-@pytest.mark.slow
-def test_holmes(holmes):
-    compressed = huffman.compress(holmes)
-    decompressed = huffman.decompress(compressed)
-    assert holmes == decompressed
-
-
-@pytest.mark.slow
-def test_benchmark_huffman_compression(lipsum, benchmark):
-    compressed = benchmark(huffman.compress, lipsum)
-    assert compressed
-
-
-@pytest.mark.slow
-def test_benchmark_huffman_decompression(lipsum, benchmark):
-    compressed = huffman.compress(lipsum)
-    decompressed = benchmark(huffman.decompress, compressed)
-    assert decompressed

@@ -10,7 +10,7 @@ time python -m src.main --algo lzw test/resources/100kb_lipsum.txt.lzw --write-t
 
 echo "## Combo 100kb_lipsum.txt"
 time python -m src.main --algo combo test/resources/100kb_lipsum.txt --write-to-file
-time python -m src.main --algo combo test/resources/100kb_lipsum.lzw.huffman --write-to-file
+time python -m src.main --algo combo test/resources/100kb_lipsum.txt.lzhuff --write-to-file
 
 echo "## LZW 6_2mb_lipsum.txt"
 time python -m src.main --algo huffman test/resources/6_2mb_lipsum.txt --write-to-file
@@ -21,9 +21,8 @@ time python -m src.main --algo lzw test/resources/6_2mb_lipsum.txt --write-to-fi
 time python -m src.main --algo lzw test/resources/6_2mb_lipsum.txt.lzw --write-to-file
 
 echo "## Combo 6_2mb_lipsum.txt"
-time python -m src.main --algo lzw test/resources/6_2mb_lipsum.txt --write-to-file
-time python -m src.main --algo lzw test/resources/6_2mb_lipsum.txt.lzw.huffman --write-to-file
-
+time python -m src.main --algo combo test/resources/6_2mb_lipsum.txt --write-to-file
+time python -m src.main --algo combo test/resources/6_2mb_lipsum.txt.lzhuff --write-to-file
 
 echo "## LZW holmes.txt"
 time python -m src.main --algo huffman test/resources/holmes.txt --write-to-file
@@ -33,9 +32,9 @@ echo "## Huffman holmes.txt"
 time python -m src.main --algo lzw test/resources/holmes.txt --write-to-file
 time python -m src.main --algo lzw test/resources/holmes.txt.lzw --write-to-file
 
-echo "## Huffman holmes.txt"
+echo "## Combo holmes.txt"
 time python -m src.main --algo combo test/resources/holmes.txt --write-to-file
-time python -m src.main --algo combo test/resources/holmes.txt.lzw.huffman --write-to-file
+time python -m src.main --algo combo test/resources/holmes.txt.lzhuff --write-to-file
 
 echo "cleanup"
 
@@ -47,4 +46,10 @@ test/resources/6_2mb_lipsum.txt.huffman \
 test/resources/6_2mb_lipsum.txt.huffman.out \
 test/resources/6_2mb_lipsum.txt.lzw \
 test/resources/6_2mb_lipsum.txt.lzw.out \
-test/resources/holmes.txt.huffman.out
+test/resources/holmes.txt.huffman.out \
+test/resources/100kb_lipsum.txt.lzhuff \
+test/resources/6_2mb_lipsum.txt.lzhuff \
+test/resources/6_2mb_lipsum.txt.lzw.huffman \
+test/resources/6_2mb_lipsum.txt.lzw.huffman.out \
+test/resources/holmes.txt.lzhuff \
+test/resources/holmes.txt.lzhuff.out
