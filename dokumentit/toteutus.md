@@ -17,8 +17,6 @@ Program structure:
 
 Performance, compression and O-analysis comparison:
 
-(Execution speeds are relative to writer's own machine, a 2019 macbook pro with 2,3 GHz intel i9 CPU cores.)
-
 - LZW:
     TODO: present o-analysis
 - Huffman:
@@ -26,28 +24,41 @@ Performance, compression and O-analysis comparison:
     -
 
 How the project implementation deviates from the "specification":
-    - 
+    - Data is read as chars, not bytes. It is written with significant overhead by using python's pickle module, and currently (as of week 4) this overhead affects 
+
+
+Execution times are relative to writer's own machine, a 2019 macbook pro with 2,3 GHz intel i9 CPU cores. Tests were run a couple of times, and the recorded results were chosen from the more average ones. Deviation analysis was deemed out of scope for this report.
+
+Compression ratios written as xy% of data remaining after the compression operation.
 
 Benchmarked comparisons:
 
--  100 kilobytes of simple Lorem Ipsum (A very easy file to compress):
-    - LZW:
-        - Compressed 100625 bytes to 53392 bytes, ratio: 0.5306037267080745
-        - Takes ~125 milliseconds
-    - Huffman:
-        - Compressed 100625 bytes to 54164 bytes, ratio: 0.5382757763975156
-        - Takes ~105 milliseconds
-- 2 Megabytes of various ASCII data (holmes.txt):
-    - LZW:
-        - Compressed 6488666 bytes to 5185045 bytes, ratio: 0.7990926023931575
-        - takes ~2.2 seconds
-    - Huffman:
-        - Compressed 6488666 bytes to 3683682 bytes, ratio: 0.567710219635284
-        - takes ~1.5 seconds
+## 100 kilobytes of simple Lorem Ipsum (A very easy file to compress)
+100kb_lipsum.txt
+| Algorithm     | Compression time | Decompression time | Compression ratio |
+| ------------- | ---------------- | ------------------ | ----------------- |
+| LZW           | 90 milliseconds  | 145 milliseconds   | 54%               |
+| Huffman       | 98 milliseconds  | 80 milliseconds    | 53%               |
 
 
+## 6.2 Megabytes of simple Lorem Ipsum (A very easy but larger file to compress) 
+6_2mb_lipsum.txt
+
+| Algorithm     | Compression time  | Decompression time |  Compression ratio |
+| ------------- | ----------------  | ------------------ | -----------------  |
+| LZW           | 1.43 seconds      | 5.38 seconds       | % 54%              |
+| Huffman       | 2.06 seconds      | 0.55 seconds       | % 44%              |
+
+    
+## 6.2 Megabytes of varying ASCII text 
+holmes.txt
+| Algorithm     | Compression time | Decompression time | Compression ratio |
+| ------------- | ---------------- | ------------------ | ----------------- |
+| LZW           | 1.58 seconds     | 5.79 seconds       | 57%               |
+| Huffman       | 1.09 seconds     | 1.03 seconds       | 79%               |
 
 
+As we can notice, LZW decompression time grows as a function of the input size, whereas with Huffman the algorithm time grows as a function of the compression ratio and file size.
 
 
 Deficiencies and improvement ideas for the project:
