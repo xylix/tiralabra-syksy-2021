@@ -50,13 +50,13 @@ def temp_dir() -> Iterator[Path]:
 
 @pytest.fixture
 def lipsum() -> bytes:
-    with open(RESOURCES / TEST_LIPSUMFILE, "rb") as f:
-        data = f.read()
+    with open(RESOURCES / TEST_LIPSUMFILE, "rb") as file:
+        data = file.read()
     return data
 
 
 @pytest.fixture
 def holmes() -> bytes:
-    with open(RESOURCES / "holmes.txt", "rb") as f:
-        data = f.read()
+    with open(RESOURCES / "holmes.txt", "rb") as file:
+        data = file.read()
     return data

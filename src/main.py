@@ -15,14 +15,14 @@ FILETYPES_TO_ARCHIVE = [".txt"]
 
 
 class Algorithm(Enum):
-    lzw = "lzw"
-    huffman = "huffman"
+    LZW = "lzw"
+    HUFFMAN = "huffman"
 
 
 class Operation(Enum):
-    archive = "archive"
-    extract = "extract"
-    auto = "auto"
+    ARCHIVE = "archive"
+    EXTRACT = "extract"
+    AUTO = "auto"
 
 
 # The type ignores for enum params are necessary because typer has problems with enum default values
@@ -44,9 +44,9 @@ def main(
     logging.debug(f"Argument List: {sys.argv}")
     logging.debug(f"locals: {locals()}")
 
-    if algo == Algorithm.lzw:
+    if algo == Algorithm.LZW:
         module = lzw
-    elif algo == Algorithm.huffman:
+    elif algo == Algorithm.HUFFMAN:
         module = huffman
     else:
         raise TypeError("Invalid algorithm specified")
@@ -54,7 +54,7 @@ def main(
     if operation not in Operation:
         raise TypeError("Invalid operation")
 
-    if operation == operation.archive and (
+    if operation == operation.ARCHIVE and (
         ".lzw" in filename or ".huffman" in filename
     ):
         raise UnsupportedOperation("Do not archive already archived files")
@@ -81,13 +81,13 @@ def main(
 
     with open(infile, "rb") as file:
         input_data = file.read()
-    if operation == operation.archive:
+    if operation == operation.ARCHIVE:
         assert infile.suffix in FILETYPES_TO_ARCHIVE
         output, outf_name = compress(input_data)
-    elif operation == operation.extract:
+    elif operation == operation.EXTRACT:
         assert infile.suffix in SUPPORTED_ARCHIVES
         output, outf_name = decompress(input_data)
-    elif operation == operation.auto:
+    elif operation == operation.AUTO:
         logging.debug(f"Suffix: `{infile.suffix}`")
 
         if infile.suffix == ".lzw":
