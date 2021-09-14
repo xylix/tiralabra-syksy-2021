@@ -18,10 +18,10 @@
 ## Performance, compression and O-analysis comparison:
 
 - LZW:
-    TODO: present o-analysis
+    - TODO: present o-analysis
 - Huffman:
-    TODO: present o-analysis
-    -
+    - TODO: present o-analysis
+    
 
 How the project implementation deviates from the "specification":
     - Data is read as chars, not bytes. It is written with significant overhead by using python's pickle module, and currently (as of week 4) this overhead affects 
@@ -64,8 +64,8 @@ Both algorithms time complexities should also be affected by the amount of symbo
 
 
 ## Deficiencies and improvement ideas for the project:
-- 
-
+- Reading data as 8-bit or other stable length input bytes instead of ASCII chars. Should enable encoding arbitrary input files.
+- LZW can quite simply be optimized by utilizing "clear codes" when the dict seems to have lots of not-useful data encoded at the smaller indices. This would improve performance on data which varies a lot.
 
 ## Sources:
 - LZW:

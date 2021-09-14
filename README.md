@@ -8,10 +8,12 @@ Setup: create virtualenv (or don't) and run `pip install -r dev-requirements.txt
 
 Command line help: `python -m src.main --help`
 
-Compress `filename` with LZW : `python -m src.main filename --operation archive --algorithm lzw`
-Compress `filename` with Huffman coding: `python -m src.main filename --operation archive --algorithm huffman`
+NOTE: currently only ASCII .txt file compression is supported. Non ASCII files may fail with weird errors and non-txt files will fail with `UnsupportedOperation`.
 
-Extract `filename` (that has either .lzw or .huffman extension) : `python -m src.main filename --operation extract `
+Compress `filename` with LZW : `python -m src.main filename --algorithm lzw --write-to-file`
+Compress `filename` with Huffman coding: `python -m src.main filename --algorithm huffman --write-to-file`
+
+Extract `filename` (that has either .lzw or .huffman extension, algorithm is autodetectd) : `python -m src.main filename --write-to-file`
 
 
 
@@ -19,6 +21,9 @@ Extract `filename` (that has either .lzw or .huffman extension) : `python -m src
 
 Run tests: `make test` 
 Run performance tests: `make test-with-benchmarks`
+Run simple benchmarks: `make simple-benchmarks`
+
+### Profiling
 
 Run with `python -m cProfile -o profile.out -s cumtime -m src.main` to profile
 
