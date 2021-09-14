@@ -6,6 +6,7 @@ from typing import Dict, List
 
 START_DICT: Dict[str, int] = {chr(i): i for i in range(128)}
 MAX_DICT = 16000
+ALGORITHM_NAME = "lzw"
 
 
 def compress(input_data: bytes) -> bytes:

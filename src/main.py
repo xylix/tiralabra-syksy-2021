@@ -60,9 +60,9 @@ def _decompress(module, filename, input_data: bytes) -> Tuple[bytes, str]:
     return output, outf_name
 
 
-def _compress(module, filename: str, original_suffix: str, input_data: bytes):
+def _compress(module, filename: str, output_suffix: str, input_data: bytes):
     output = module.compress(input_data)
-    outf_name = f"{filename}.{original_suffix}"
+    outf_name = f"{filename}.{output_suffix}"
     print(
         f"Compressed {len(input_data)} bytes to {len(output)} bytes, ratio: { len(output) / len(input_data) }"
     )
@@ -82,7 +82,7 @@ def _auto_operate(
     if infile.suffix in SUPPORTED_ARCHIVES:
         return _decompress(module, filename, input_data)
     elif infile.suffix in FILETYPES_TO_ARCHIVE:
-        return _compress(module, filename, infile.suffix, input_data)
+        return _compress(module, filename, module.ALGORITHM_NAME, input_data)
     else:
         raise ValueError(f"Cannot figure out automatic operation type from {filename}")
 

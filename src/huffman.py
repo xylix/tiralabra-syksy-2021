@@ -4,6 +4,8 @@ import logging
 import pickle
 from typing import Dict, Iterable, List, Optional, Tuple
 
+ALGORITHM_NAME = "huffman"
+
 
 def create_freq_dict(data: bytes) -> Dict[int, int]:
     """Generate character frequency dictionary from input_data data."""
