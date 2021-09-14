@@ -1,7 +1,7 @@
 # Toteutusdokumentti
 
     
-Program structure:
+## Program structure:
 - src/ contains the program code
     - main.py is the main CLI and entry point for the program.
     - lzw.py is the implementation of the LZW compression algorithm
@@ -15,7 +15,7 @@ Program structure:
         - run normal tests with `make test`, slower tests with `make test-with-benchmarks`
     - test/resources contains the test input files
 
-Performance, compression and O-analysis comparison:
+## Performance, compression and O-analysis comparison:
 
 - LZW:
     TODO: present o-analysis
@@ -33,7 +33,7 @@ Compression ratios written as xy% of data remaining after the compression operat
 
 Benchmarked comparisons:
 
-## 100 kilobytes of simple Lorem Ipsum (A very easy file to compress)
+### 100 kilobytes of simple Lorem Ipsum (A very easy file to compress)
 100kb_lipsum.txt
 | Algorithm     | Compression time | Decompression time | Compression ratio |
 | ------------- | ---------------- | ------------------ | ----------------- |
@@ -41,7 +41,7 @@ Benchmarked comparisons:
 | Huffman       | 98 milliseconds  | 80 milliseconds    | 53%               |
 
 
-## 6.2 Megabytes of simple Lorem Ipsum (A very easy but larger file to compress) 
+### 6.2 Megabytes of simple Lorem Ipsum (A very easy but larger file to compress) 
 6_2mb_lipsum.txt
 
 | Algorithm     | Compression time  | Decompression time |  Compression ratio |
@@ -50,7 +50,7 @@ Benchmarked comparisons:
 | Huffman       | 2.06 seconds      | 0.55 seconds       | % 44%              |
 
     
-## 6.2 Megabytes of varying ASCII text 
+### 6.2 Megabytes of varying ASCII text 
 holmes.txt
 | Algorithm     | Compression time | Decompression time | Compression ratio |
 | ------------- | ---------------- | ------------------ | ----------------- |
@@ -58,14 +58,16 @@ holmes.txt
 | Huffman       | 1.09 seconds     | 1.03 seconds       | 79%               |
 
 
-As we can notice, LZW decompression time grows as a function of the input size, whereas with Huffman the algorithm time grows as a function of the compression ratio and file size.
+As we can notice, LZW decompression time grows as a function of the input size, whereas with Huffman the algorithm time grows as a function of the compression ratio and file size. Further analysis will be done.
+
+Both algorithms time complexities should also be affected by the amount of symbols in the input data. This will also be mapped in a future analysis.
 
 
-Deficiencies and improvement ideas for the project:
+## Deficiencies and improvement ideas for the project:
 - 
 
 
-Sources:
+## Sources:
 - LZW:
     - 
 - Huffman:
