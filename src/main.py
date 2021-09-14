@@ -19,6 +19,7 @@ class Algorithm(Enum):
     "Supported encoding and decoding algorithms."
     LZW = "lzw"
     HUFFMAN = "huffman"
+    COMBO = "combo"
 
 
 def _determine_module_from_algo(algo: Algorithm):
@@ -27,6 +28,8 @@ def _determine_module_from_algo(algo: Algorithm):
         return lzw
     elif algo == Algorithm.HUFFMAN:
         return huffman
+    elif algo == Algorithm.COMBO:
+        return None
     else:
         raise TypeError("Invalid algorithm specified")
 
@@ -51,11 +54,16 @@ def _decompress(module, filename, input_data: bytes) -> Tuple[bytes, str]:
     return output, outf_name
 
 
-def _compress(module, filename: str, output_suffix: str, input_data: bytes):
-    output = module.compress(input_data)
-    outf_name = f"{filename}.{output_suffix}"
+def _compress(module, filename: str, input_data: bytes, combo: bool):
+    if combo:
+        output = huffman.compress(lzw.compress(input_data))
+        outf_name = f"{filename}.lzw.huffman"
+    else:
+        output = module.compress(input_data)
+        outf_name = f"{filename}.{module.ALGORITHM_NAME}"
     print(
-        f"Compressed {len(input_data)} bytes to {len(output)} bytes, ratio: { len(output) / len(input_data) }"
+        f"Compressed {len(input_data)} bytes to {len(output)} "
+        f"bytes, ratio: { len(output) / len(input_data) }"
     )
 
     return output, outf_name
@@ -76,7 +84,7 @@ def _auto_operate(algo, filename: str) -> Tuple[bytes, str]:
     if infile.suffix in SUPPORTED_ARCHIVES:
         return _decompress(module, filename, input_data)
     elif infile.suffix in FILETYPES_TO_ARCHIVE:
-        return _compress(module, filename, module.ALGORITHM_NAME, input_data)
+        return _compress(module, filename, input_data, algo == algo.COMBO)
     else:
         raise ValueError(f"Filetype of {filename} is not yet supported")
 
