@@ -49,7 +49,5 @@ test/resources/6_2mb_lipsum.txt.lzw.out \
 test/resources/holmes.txt.huffman.out \
 test/resources/100kb_lipsum.txt.lzhuff \
 test/resources/6_2mb_lipsum.txt.lzhuff \
-test/resources/6_2mb_lipsum.txt.lzw.huffman \
-test/resources/6_2mb_lipsum.txt.lzw.huffman.out \
 test/resources/holmes.txt.lzhuff \
 test/resources/holmes.txt.lzhuff.out
