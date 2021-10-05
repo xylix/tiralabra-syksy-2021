@@ -1,4 +1,5 @@
 import pickle
+from collections import Counter
 
 from src import huffman
 from src.huffman import HuffmanResult
@@ -12,7 +13,7 @@ TEST_DATA = {
 
 def test_freq_dict():
     for cleartext, expected_output in TEST_DATA.items():
-        out = huffman.create_freq_dict(cleartext)
+        out = Counter(cleartext)
         assert out == expected_output.freq_dict
 
 

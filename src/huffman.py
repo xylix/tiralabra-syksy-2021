@@ -1,3 +1,4 @@
+from collections import Counter
 from dataclasses import dataclass
 from heapq import heappop, heappush
 import logging
@@ -5,17 +6,6 @@ import pickle
 from typing import Dict, Iterable, List, Optional, Tuple
 
 ALGORITHM_NAME = "huffman"
-
-
-def create_freq_dict(data: bytes) -> Dict[int, int]:
-    """Generate character frequency dictionary from input_data data."""
-    bytedict: Dict[int, int] = {}
-    for char in data:
-        if char in bytedict:
-            bytedict[char] += 1
-        else:
-            bytedict[char] = 1
-    return bytedict
 
 
 @dataclass
@@ -113,7 +103,7 @@ def compress(data: bytes) -> bytes:
     Returns a pickle dump of the binary data and the frequency
     dict used to encode, which is necessary for decoding.
     """
-    frequency_dict = create_freq_dict(data)
+    frequency_dict = Counter(data)
     root = create_huffman_tree(frequency_dict)
     # logging.debug(q[0])
     # logging.debug(visualize_tree.print_tree(q[0]))
