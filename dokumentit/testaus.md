@@ -1,17 +1,16 @@
 # Testing document
 
-## Week 4 test coverage:
+## Week 5 test coverage:
 Name                          Stmts   Miss  Cover
 -------------------------------------------------
 src/__init__.py                   0      0   100%
-src/huffman.py                   83      0   100%
+src/huffman.py                   76      0   100%
 src/lzw.py                       57      2    96%
-src/main.py                      81     14    83%
+src/main.py                      75      8    89%
 src/utils/__init__.py             0      0   100%
 src/utils/visualize_tree.py       1      1     0%
 -------------------------------------------------
-TOTAL                           222     17    92%
-
+TOTAL                           209     11    95%
 
 ## Test explanations
 

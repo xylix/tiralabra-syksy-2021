@@ -39,6 +39,7 @@ Run with `python -m cProfile -o profile.out -s cumtime -m src.main` to profile
 	* [Week report 2](https://github.com/xylix/tiralabra-syksy-2021/blob/main/dokumentit/viikkoraportit/2.md)
 	* [Week report 3](https://github.com/xylix/tiralabra-syksy-2021/blob/main/dokumentit/viikkoraportit/3.md)
 	* [Week report 4](https://github.com/xylix/tiralabra-syksy-2021/blob/main/dokumentit/viikkoraportit/4.md)
+	* [Week report 5](https://github.com/xylix/tiralabra-syksy-2021/blob/main/dokumentit/viikkoraportit/5.md)
 
 
 

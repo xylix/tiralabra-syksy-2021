@@ -23,15 +23,15 @@
 - Huffman:
     - TODO: present o-analysis
     - TODO: present hypothesis / theoretical compression efficiency
-    
+
 
 How the project implementation deviates from the "specification":
-    - Data is read as chars, not bytes. It is written with significant overhead by using python's pickle module, and currently (as of week 4) this overhead affects 
+    - There should be no significant difference.
 
 
 Execution times are relative to writer's own machine, a 2019 macbook pro with 2,3 GHz intel i9 CPU cores. Tests were run a couple of times, and the recorded results were chosen from the more average ones. Deviation analysis was deemed out of scope for this report.
 
-Compression ratios written as xy% of data remaining after the compression operation.
+Compression ratios written as % of data remaining after the compression operation.
 
 Benchmarked comparisons:
 
