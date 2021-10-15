@@ -8,13 +8,10 @@ Setup: create virtualenv (or don't) and run `pip install -r dev-requirements.txt
 
 Command line help: `python -m src.main --help`
 
-NOTE: currently only ASCII .txt file compression is supported. Non ASCII files may fail with weird errors and non-txt files will fail with `UnsupportedOperation`.
-
 Compress `filename` with LZW : `python -m src.main filename --algorithm lzw --write-to-file`
 Compress `filename` with Huffman coding: `python -m src.main filename --algorithm huffman --write-to-file`
 
 Extract `filename` (that has either .lzw or .huffman extension, algorithm is autodetectd) : `python -m src.main filename --write-to-file`
-
 
 
 ## Development
@@ -40,6 +37,7 @@ Run with `python -m cProfile -o profile.out -s cumtime -m src.main` to profile
 	* [Week report 3](https://github.com/xylix/tiralabra-syksy-2021/blob/main/dokumentit/viikkoraportit/3.md)
 	* [Week report 4](https://github.com/xylix/tiralabra-syksy-2021/blob/main/dokumentit/viikkoraportit/4.md)
 	* [Week report 5](https://github.com/xylix/tiralabra-syksy-2021/blob/main/dokumentit/viikkoraportit/5.md)
+	* [Week report 6](https://github.com/xylix/tiralabra-syksy-2021/blob/main/dokumentit/viikkoraportit/6.md)
 
 
 

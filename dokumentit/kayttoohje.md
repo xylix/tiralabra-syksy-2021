@@ -1,12 +1,20 @@
-# Käyttöohje
+# Usage instructions
 
-TODO:
-    Miten ohjelma suoritetaan, miten eri toiminnallisuuksia käytetään
-    Minkä muotoisia syötteitä ohjelma hyväksyy
-    Missä hakemistossa on jar ja ajamiseen tarvittavat testitiedostot.
+## Usage
 
-Työn tekemisessä ja arvostelussa painotetaan laitoksen muita harjoitustöitä vähemmän dokumentointia. Ohjelmakoodin on kuitenkin oltava mahdollisimman selkeää, metodien on oltava lyhyitä, luokkien, muuttujien ja metodien on oltava kuvaavasti nimettyjä ja ohjelman rakenteen muutenkin kaikin puolin selkeä.
+Setup: create virtualenv (or don't) and run `pip install -r dev-requirements.txt`
 
-Koodin tulee olla kirjoitettu mahdollisimman selkeästi ja ymmärrettävästi. Kommentoi koodiasi kattavasti, mutta napakasti. Jokainen luokka, metodi ja attribuutti ei välttämättä kaipaa kommenttia, mutta kaikki olennainen ja vähemmän kuin itsestään selvä on oltava selostettu kommenteissa. Sisällytä metodien kommentteihin niiden parametrien ja paluuarvon merkitykset. Metodien sisäinen kommentointi ei ideaalitapauksessa pitäisi olla tarpeen, sillä metodien tulee olla kuvaavasti nimettyjä, kompakteja ja yksinkertaisia, helposti hahmotettavia kokonaisuuksia. Mikäli metodin toimintaa kuitenkin on vaikea hahmottaa pelkän koodin ja metodin yleiskommentin perusteella, voidaan sen koodia kommentoida sisäisestikin.
 
-JavaDoc-kommentointia käytetään kaikissa töissä, jotka toteutetaan Javalla. NetBeans toteuttaa pyydettäessä luokille ja metodeille JavaDoc-kommenttien pohjat. Mikäli teet työsi jollakin muulla kielellä, sovi käytetystä kommentoitityylistä ohjaajan kanssa. Luokkakaaviot saat lisättyä JavaDoc:iisi suoraan käyttämällä YWorks-nimistä työkalua, joka generoi suoraan NetBeans-projektista kaaviot.
+Command line help: `python -m src.main --help`
+
+
+Compress `filename` with LZW (Should be an ASCII or UTF-8): `python -m src.main filename --algorithm lzw --write-to-file`
+Compress `filename` with Huffman coding: `python -m src.main filename --algorithm huffman --write-to-file`
+
+
+Extract `filename` (that has either .lzw or .huffman extension, algorithm is autodetectd) : `python -m src.main filename --write-to-file`
+
+## Tests
+
+Run tests: `make test` 
+Run performance tests: `make test-with-benchmarks`
