@@ -17,14 +17,6 @@
 
 ## Performance, compression and O-analysis comparison:
 
-- LZW:
-    - TODO: present o-analysis
-    - TODO: present hypothesis / theoretical compression efficiency
-- Huffman:
-    - TODO: present o-analysis
-    - TODO: present hypothesis / theoretical compression efficiency
-
-
 How the project implementation deviates from the "specification":
     - There should be no significant difference.
 
